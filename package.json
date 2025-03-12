@@ -1,0 +1,23 @@
+{
+  "name": "lamp",
+  "version": "1.0.0",
+  "description": "SE-498-01 Software Engineering Capstone; LAMP  ## 1. contributors;  ### Daisy Fernandez-Reyes'25         email; fernandezreyes@chapman.edu         git; [daisyb3ll]() ### Rory Sullivan'25         email; annbrown@chapman.edu         git;[rosullivan2]() ### Sarah Yoon'25         email; saryoon@chapman.edu         git; sarah-yoon",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rosullivan2/LAMP.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rosullivan2/LAMP/issues"
+  },
+  "homepage": "https://github.com/rosullivan2/LAMP#readme",
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}
