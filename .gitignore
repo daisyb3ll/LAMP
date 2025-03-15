@@ -1,0 +1,10 @@
+# Ignore node_modules (prevents committing large dependencies)
+node_modules/
+
+# Ignore environment variables (prevents leaking API keys)
+.env
+
+# Ignore logs
+logs/
+*.log
+npm-debug.log*
