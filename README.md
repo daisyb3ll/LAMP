@@ -28,7 +28,8 @@ Listen: Album and Music Portfolio, is our Software Engineering Capstone project 
 
 **documentation:**
 - `README.md`
-
+- [proposal](https://docs.google.com/document/d/1efeCflBILzFNpuGcEi38ipTDPUY-ot4upD_e3uvD2qM/edit?usp=sharing)
+- [feature summary](https://docs.google.com/document/d/1y50wy7NUgvRf20IATAFVhJl1Hc7k3E0xlytFx1nFC8k/edit?usp=sharing)
 **database:**
 
 ### known runtime/compilaiton errors  
