@@ -81,4 +81,4 @@ project structure should look like this
 ```
 
 ### 6. test UI
-run this on the terminal: `[http://localhost:3000/](http://localhost:3000)`
+run this on the terminal: `http://localhost:3000`
