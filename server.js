@@ -10,6 +10,8 @@ const app = express(); // Initialize Express first
 app.set('view engine', 'ejs');
 app.use(express.static(path.join(__dirname, 'public'))); // Ensure correct static path
 
+app.use(express.urlencoded({ extended: true }));
+
 // ✅ Use environment variable for DB connection
 const dbURL = process.env.MONGO_URI || 'mongodb://localhost:27017/defaultDB';
 
@@ -90,8 +92,13 @@ try {
     console.error("⚠️ WARNING: 'routes/users.js' not found. Create the file to avoid errors.");
 }
 
+
+
 // ✅ Homepage Route
 app.get('/', (req, res) => {
-    res.render('index', { message: 'Welcome to the Spotify API App!' });
+    res.redirect('/users/login');
 });
 
+app.get('/home', (req, res) => {
+    res.render('home');
+});
