@@ -1,0 +1,78 @@
+<style>
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        font-family: Arial, sans-serif;
+    }
+
+    .container {
+        display: flex;
+        gap: 50px;
+        align-items: center;
+    }
+
+    .image-box {
+        width: 300px;
+        height: 400px;
+        border: 2px dashed gray;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .form-box {
+        border: 2px solid gray;
+        padding: 30px;
+        border-radius: 10px;
+        text-align: center;
+        width: 300px;
+    }
+
+    h1 {
+        margin-bottom: 5px;
+    }
+
+    input {
+        width: 90%;
+        padding: 8px;
+        margin: 8px 0;
+        border: 1px solid gray;
+        border-radius: 5px;
+        background-color: #71db71;
+        color: black;
+    }
+
+    input::placeholder {
+        color: black;
+    }
+
+    button {
+        margin-top: 10px;
+        padding: 8px 16px;
+        border: 1px dashed gray;
+        border-radius: 5px;
+        background: white;
+        cursor: pointer;
+    }
+</style>
+
+<div class="container">
+    <div class="image-box">
+        <p>Image Placeholder</p>
+    </div>
+
+    <div class="form-box">
+        <h1>LAMP</h1>
+        <p>create account</p>
+        <form action="/users/signup" method="POST">
+            <input name="username" placeholder="username" required><br>
+            <input type="password" name="password" placeholder="password" required><br>
+            <input type="password" name="password_confirm" placeholder="password again" required><br>
+            <input type="email" name="email" placeholder="email@email.com" required><br>
+            <button type="submit">create</button>
+        </form>
+    </div>
+</div>
