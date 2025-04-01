@@ -99,6 +99,37 @@ app.get('/', (req, res) => {
     res.redirect('/users/login');
 });
 
-app.get('/home', (req, res) => {
-    res.render('home');
+app.get('/home', async (req, res) => {
+    try {
+        const token = await getSpotifyToken();
+        if (!token) return res.status(500).send("Failed to get Spotify token");
+
+        // Album of the day still from new releases
+        const newReleaseResponse = await axios.get('https://api.spotify.com/v1/browse/new-releases?limit=50', {
+            headers: { Authorization: `Bearer ${token}` }
+        });
+        const albumsOfTheDay = newReleaseResponse.data.albums.items;
+        const dayIndex = new Date().getDate() % albumsOfTheDay.length;
+        const albumOfTheDay = albumsOfTheDay[dayIndex];
+
+        // Random Album from random letter search
+        const randomLetters = "abcdefghijklmnopqrstuvwxyz";
+        const randomChar = randomLetters[Math.floor(Math.random() * randomLetters.length)];
+
+        const randomResponse = await axios.get(`https://api.spotify.com/v1/search?q=${randomChar}&type=album&limit=50`, {
+            headers: { Authorization: `Bearer ${token}` }
+        });
+
+        const randomAlbums = randomResponse.data.albums.items;
+        const randomAlbum = randomAlbums[Math.floor(Math.random() * randomAlbums.length)];
+
+        res.render('home', { album: albumOfTheDay, randomAlbum: randomAlbum });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Error fetching albums");
+    }
 });
+
+
+
