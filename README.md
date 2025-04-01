@@ -82,3 +82,5 @@ project structure should look like this
 
 ### 6. test UI
 run this on the terminal: `http://localhost:3000`
+user: flappy
+password: bird
