@@ -6,7 +6,7 @@ role: UX/UI Design Engineering, Frontend Development <br>
 email: fernandezreyes@chapman.edu <br>
 git: [daisyb3ll](https://github.com/daisyb3ll)
 ### [Rory Sullivan'25](https://www.linkedin.com/in/rory-sullivan-4bb233219/)
-role: FullStack Development <br>
+role: Database Engineering, Backend Development <br>
 email: rosullivan@chapman.edu <br>
 git: [rosullivan2](https://github.com/rosullivan2)
 ### [Sarah Yoon'25](https://www.linkedin.com/in/bizsarahyoon/)
