@@ -2,7 +2,7 @@ const express = require('express');
 const User = require('../models/User');
 const router = express.Router();
 
-// TEMPORARY user for testing
+// TEMPORARY user for testing4
 const tempUser = {
     username: 'flappy',
     password: 'bird' // plaintext for demo ONLY
