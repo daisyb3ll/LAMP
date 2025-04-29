@@ -5,7 +5,26 @@ const axios = require('axios');
 const ejs = require('ejs');
 const path = require('path');
 
+const swaggerJsDoc = require('swagger-jsdoc');
+const swaggerUi = require('swagger-ui-express');
+
 const app = express(); // Initialize Express
+
+// ✅ Swagger setup
+const swaggerOptions = {
+    swaggerDefinition: {
+        openapi: '3.0.0',
+        info: {
+            title: 'LAMP API',
+            version: '1.0.0',
+            description: 'API for the LAMP project'
+        }
+    },
+    apis: ['./routes/*.js'] // Adjust if your routes are in a different folder
+};
+
+const swaggerDocs = swaggerJsDoc(swaggerOptions);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs)); // <--- Exposes Swagger UI
 
 // View engine and static files
 app.set('view engine', 'ejs');
