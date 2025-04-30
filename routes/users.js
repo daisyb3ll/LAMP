@@ -2,7 +2,7 @@ const express = require('express');
 const User = require('../models/User');
 const router = express.Router();
 
-// TEMPORARY user for testing
+// TEMPORARY user for testing4
 const tempUser = {
     username: 'flappy',
     password: 'bird' // plaintext for demo ONLY
@@ -12,6 +12,28 @@ const tempUser = {
 router.get('/login', (req, res) => {
     res.render('login', { error: null });
 });
+
+
+/**
+ * @swagger
+ * /users/signup:
+ *   post:
+ *     summary: Create a new user
+ *     tags:
+ *       - Users
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/x-www-form-urlencoded:
+ *           schema:
+ *             $ref: '#/components/schemas/User'
+ *     responses:
+ *       302:
+ *         description: Redirect to /home on success
+ *       400:
+ *         description: Validation error
+ */
+
 
 // Handle login
 router.post('/login', (req, res) => {

@@ -4,76 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <title>LAMP - Login</title>
+
+        <link rel="icon" type="image/png" href="/images/transperent-lamp-cd.png" sizes="32x32">
+        <link rel="stylesheet" href="/css/login.css">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background: #fff;
-        }
-
-        .login-box {
-            border: 2px solid #555;
-            border-radius: 10px;
-            padding: 30px;
-            text-align: center;
-            width: 300px;
-        }
-
-        h1 {
-            margin-bottom: 5px;
-        }
-
-        h2 {
-            margin: 0 0 20px 0;
-            font-weight: normal;
-            font-size: 18px;
-            color: #555;
-        }
-
-        input {
-            display: block;
-            width: 80%;
-            margin: 10px auto;
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            background: #e74c3c;
-            color: white;
-        }
-
-        input::placeholder {
-            color: white;
-        }
-
-        button {
-            margin-top: 10px;
-            padding: 10px 20px;
-            border: 2px dashed #555;
-            border-radius: 5px;
-            background: transparent;
-            cursor: pointer;
-        }
-
-        .create-account {
-            margin-top: 15px;
-            font-size: 12px;
-            color: #555;
-            text-decoration: underline;
-        }
-
-        .create-account:hover {
-            color: #000;
-        }
-
-        .error {
-            margin-top: 10px;
-            color: red;
-            font-size: 12px;
-        }
+        @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Bungee+Tint&family=Chokokutai&family=Comfortaa:wght@300..700&family=Coral+Pixels&family=Dongle&family=Gaegu&family=IM+Fell+Double+Pica:ital@0;1&family=Jersey+15&family=Kirang+Haerang&family=Lacquer&family=Lexend+Deca:wght@100..900&family=Rubik+Dirt&family=Special+Elite&family=Syne+Mono&family=Tiny5&display=swap');
     </style>
 </head>
 
@@ -89,7 +24,8 @@
 
         <!-- ERROR MESSAGE - Wrong User/Password -->
         <% if (error) { %>
-            <div class="error"><%= error %></div>
+            <div class="error">
+                <%= error %></div>
         <% } %>
 
         <a href="/users/signup" class="create-account">create account</a>
