@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>LAMP - Album</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        display: flex;
+        height: 100vh;
+      }
+
+      .sidebar {
+        width: 200px;
+        background: #f5f5f5;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        border-right: 2px solid #ccc;
+      }
+
+      .logo {
+        border: 1px solid #000;
+        padding: 10px;
+        margin-bottom: 30px;
+        text-align: center;
+      }
+
+      .nav {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        text-align: left;
+        width: 100%;
+      }
+
+      .nav a {
+        text-decoration: none;
+        color: black;
+        font-weight: bold;
+      }
+
+      .nav a:hover {
+        text-decoration: underline;
+      }
+
+      .content {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 50px;
+        padding: 40px;
+      }
+
+      .album-art {
+        border: 2px dashed #555;
+        width: 350px;
+        height: 350px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: #ddd;
+        border-radius: 10px;
+        position: relative;
+      }
+
+      .album-art img {
+        width: 300px;
+        height: 300px;
+        border-radius: 50%;
+        object-fit: cover;
+      }
+
+      .album-details {
+        border: 2px solid #555;
+        padding: 20px;
+        border-radius: 10px;
+        width: 350px;
+        height: 350px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        position: relative;
+      }
+
+      .album-details h3 {
+        margin: 0;
+        margin-bottom: 10px;
+        font-size: 18px;
+        color: red;
+      }
+
+      .songs {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        font-size: 14px;
+        color: green;
+        max-height: 120px;
+        overflow-y: auto;
+      }
+
+      .rating {
+        font-size: 32px;
+        font-weight: bold;
+        color: hotpink;
+      }
+
+      .extra-info {
+        position: absolute;
+        bottom: 20px;
+        right: 20px;
+        font-size: 10px;
+        text-align: right;
+        color: black;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="sidebar">
+      <div class="logo">lamp logo here</div>
+      <div class="nav">
+        <a href="/home">home</a>
+        <a href="#">explore</a>
+        <a href="#">library</a>
+        <a href="#">threads</a>
+      </div>
+    </div>
+
+    <div class="content">
+      <!-- Album Art -->
+      <div class="album-art">
+        <img
+          src="<%= album.images[0] ? album.images[0].url : '' %>"
+          alt="Album Art"
+        />
+      </div>
+
+      <!-- Album Details -->
+      <div class="album-details">
+        <h3><%= album.artists[0].name %></h3>
+
+        <div class="songs">
+          <% album.tracks.items.forEach(function(track) { %>
+          <div><%= track.name %></div>
+          <% }) %>
+        </div>
+
+        <div class="rating">RATING</div>
+
+        <div class="extra-info">
+          <div>TIME</div>
+          <div><%= album.release_date %></div>
+          <div>LISTENS</div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

@@ -16,120 +16,157 @@ app.use(express.urlencoded({ extended: true }));
 const dbURL = process.env.MONGO_URI || 'mongodb://localhost:27017/defaultDB';
 
 mongoose
-    .connect(dbURL)
-    .then(() => {
-        console.log('✅ Connected to MongoDB');
-        app.listen(3000, () => {
-            console.log('🚀 Server started on port 3000');
-        });
-    })
-    .catch((err) => {
-        console.error('❌ Could not connect to MongoDB:', err);
+  .connect(dbURL)
+  .then(() => {
+    console.log('✅ Connected to MongoDB');
+    app.listen(3000, () => {
+      console.log('🚀 Server started on port 3000');
     });
-
+  })
+  .catch((err) => {
+    console.error('❌ Could not connect to MongoDB:', err);
+  });
 
 // ✅ Define Schema & Model for storing Spotify data
 const trackSchema = new mongoose.Schema({
-    name: String,
-    artist: String,
-    album: String,
-    popularity: Number,
-    spotifyId: String
+  name: String,
+  artist: String,
+  album: String,
+  popularity: Number,
+  spotifyId: String,
 });
 const Track = mongoose.model('Track', trackSchema);
 
-
 // ✅ Fetch Spotify Token
 async function getSpotifyToken() {
-    try {
-        const response = await axios.post('https://accounts.spotify.com/api/token',
-            new URLSearchParams({ grant_type: 'client_credentials' }), {
-            headers: {
-                Authorization: `Basic ${Buffer.from(`${process.env.SPOTIFY_CLIENT_ID}:${process.env.SPOTIFY_CLIENT_SECRET}`).toString('base64')}`,
-                'Content-Type': 'application/x-www-form-urlencoded'
-            }
-        });
+  try {
+    const response = await axios.post(
+      'https://accounts.spotify.com/api/token',
+      new URLSearchParams({ grant_type: 'client_credentials' }),
+      {
+        headers: {
+          Authorization: `Basic ${Buffer.from(
+            `${process.env.SPOTIFY_CLIENT_ID}:${process.env.SPOTIFY_CLIENT_SECRET}`
+          ).toString('base64')}`,
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      }
+    );
 
-        console.log("🔑 Spotify Token:", response.data.access_token); // Log token
-        return response.data.access_token;
-    } catch (error) {
-        console.error("❌ Error fetching Spotify token:", error.response ? error.response.data : error.message);
-        return null;
-    }
+    console.log('🔑 Spotify Token:', response.data.access_token); // Log token
+    return response.data.access_token;
+  } catch (error) {
+    console.error(
+      '❌ Error fetching Spotify token:',
+      error.response ? error.response.data : error.message
+    );
+    return null;
+  }
 }
 
-
 app.get('/save-top-tracks', async (req, res) => {
-    try {
-        const token = await getSpotifyToken();
-        if (!token) return res.status(500).json({ error: "Failed to get Spotify token" });
+  try {
+    const token = await getSpotifyToken();
+    if (!token)
+      return res.status(500).json({ error: 'Failed to get Spotify token' });
 
-        const response = await axios.get('https://api.spotify.com/v1/browse/new-releases', {
-            headers: { Authorization: `Bearer ${token}` }
-        });
+    const response = await axios.get(
+      'https://api.spotify.com/v1/browse/new-releases',
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
 
-        const trackData = response.data.albums.items.map(track => ({
-            name: track.name,
-            artist: track.artists[0].name,
-            album: track.name,
-            spotifyId: track.id
-        }));
+    const trackData = response.data.albums.items.map((track) => ({
+      name: track.name,
+      artist: track.artists[0].name,
+      album: track.name,
+      spotifyId: track.id,
+    }));
 
-        await Track.insertMany(trackData);
-        res.json({ message: '✅ Top tracks saved to MongoDB!', data: trackData });
-
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
+    await Track.insertMany(trackData);
+    res.json({ message: '✅ Top tracks saved to MongoDB!', data: trackData });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 });
-
 
 // ✅ Check if 'routes/users.js' exists before importing
 try {
-    const userRoutes = require('./routes/users');
-    app.use('/users', userRoutes);
+  const userRoutes = require('./routes/users');
+  app.use('/users', userRoutes);
 } catch (error) {
-    console.error("⚠️ WARNING: 'routes/users.js' not found. Create the file to avoid errors.");
+  console.error(
+    "⚠️ WARNING: 'routes/users.js' not found. Create the file to avoid errors."
+  );
 }
-
-
 
 // ✅ Homepage Route
 app.get('/', (req, res) => {
-    res.redirect('/users/login');
+  res.redirect('/users/login');
 });
 
 app.get('/home', async (req, res) => {
-    try {
-        const token = await getSpotifyToken();
-        if (!token) return res.status(500).send("Failed to get Spotify token");
+  try {
+    const token = await getSpotifyToken();
+    if (!token) return res.status(500).send('Failed to get Spotify token');
 
-        // Album of the day still from new releases
-        const newReleaseResponse = await axios.get('https://api.spotify.com/v1/browse/new-releases?limit=50', {
-            headers: { Authorization: `Bearer ${token}` }
-        });
-        const albumsOfTheDay = newReleaseResponse.data.albums.items;
-        const dayIndex = new Date().getDate() % albumsOfTheDay.length;
-        const albumOfTheDay = albumsOfTheDay[dayIndex];
+    // Album of the day still from new releases
+    const newReleaseResponse = await axios.get(
+      'https://api.spotify.com/v1/browse/new-releases?limit=50',
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
+    const albumsOfTheDay = newReleaseResponse.data.albums.items;
+    const dayIndex = new Date().getDate() % albumsOfTheDay.length;
+    const albumOfTheDay = albumsOfTheDay[dayIndex];
 
-        // Random Album from random letter search
-        const randomLetters = "abcdefghijklmnopqrstuvwxyz";
-        const randomChar = randomLetters[Math.floor(Math.random() * randomLetters.length)];
+    // Random Album from random letter search
+    const randomLetters = 'abcdefghijklmnopqrstuvwxyz';
+    const randomChar =
+      randomLetters[Math.floor(Math.random() * randomLetters.length)];
 
-        const randomResponse = await axios.get(`https://api.spotify.com/v1/search?q=${randomChar}&type=album&limit=50`, {
-            headers: { Authorization: `Bearer ${token}` }
-        });
+    const randomResponse = await axios.get(
+      `https://api.spotify.com/v1/search?q=${randomChar}&type=album&limit=50`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
 
-        const randomAlbums = randomResponse.data.albums.items;
-        const randomAlbum = randomAlbums[Math.floor(Math.random() * randomAlbums.length)];
+    const randomAlbums = randomResponse.data.albums.items;
+    const randomAlbum =
+      randomAlbums[Math.floor(Math.random() * randomAlbums.length)];
 
-        res.render('home', { album: albumOfTheDay, randomAlbum: randomAlbum });
-
-    } catch (error) {
-        console.error(error);
-        res.status(500).send("Error fetching albums");
-    }
+    res.render('home', { album: albumOfTheDay, randomAlbum: randomAlbum });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error fetching albums');
+  }
 });
 
+// ✅ Album Page Route
+app.get('/album/:id', async (req, res) => {
+  const token = await getSpotifyToken();
+  if (!token) return res.status(500).send('Failed to get Spotify token');
 
+  const albumId = req.params.id;
 
+  try {
+    const albumResponse = await axios.get(
+      `https://api.spotify.com/v1/albums/${albumId}`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
+
+    const album = albumResponse.data;
+    res.render('album', { album });
+  } catch (error) {
+    console.error(
+      'Error fetching album details',
+      error.response?.data || error.message
+    );
+    res.status(500).send('Error fetching album details');
+  }
+});
