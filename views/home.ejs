@@ -1,164 +1,189 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>LAMP - Home</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            display: flex;
-            height: 100vh;
-        }
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        display: flex;
+        height: 100vh;
+      }
 
-        /* Sidebar */
-        .sidebar {
-            width: 200px;
-            background: #f5f5f5;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            border-right: 2px solid #ccc;
-        }
+      .sidebar {
+        width: 200px;
+        background: #f5f5f5;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        border-right: 2px solid #ccc;
+      }
 
-        .logo {
-            border: 1px solid #000;
-            padding: 10px;
-            margin-bottom: 30px;
-            text-align: center;
-        }
+      .logo {
+        border: 1px solid #000;
+        padding: 10px;
+        margin-bottom: 30px;
+        text-align: center;
+      }
 
-        .nav {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            text-align: left;
-            width: 100%;
-        }
+      .nav {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        text-align: left;
+        width: 100%;
+      }
 
-        .nav a {
-            text-decoration: none;
-            color: black;
-            font-weight: bold;
-        }
+      .nav a {
+        text-decoration: none;
+        color: black;
+        font-weight: bold;
+      }
 
-        .nav a:hover {
-            text-decoration: underline;
-        }
+      .nav a:hover {
+        text-decoration: underline;
+      }
 
-        /* Main Content */
-        .content {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+      .content {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: start;
+        padding: 40px;
+      }
 
-        .album-box {
-            border: 2px dashed #888;
-            border-radius: 10px;
-            padding: 30px;
-            text-align: center;
-            transition: background-color 0.3s, border-color 0.3s;
-        }
+      .albums-container {
+        display: flex;
+        flex-direction: row;
+        gap: 60px;
+      }
 
-        .album-box:hover {
-            background-color: #f0f0f0;
-            border-color: #555;
-            cursor: pointer;
-        }
+      .album-section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
 
-        .album-box h2 {
-            margin-bottom: 20px;
-        }
+      .album-box {
+        width: 300px;
+        height: 450px;
+        border: 2px dashed #888;
+        border-radius: 10px;
+        padding: 30px 20px 20px 20px;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
 
-        .album-placeholder {
-            width: 200px;
-            height: 200px;
-            border: 2px solid #555;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: 0 auto;
-            background: #eee;
-        }
+      .album-box h2 {
+        margin-bottom: 20px;
+      }
 
-        .album-placeholder::before {
-            content: "album";
-            color: #555;
-        }
+      .album-content {
+        flex: 1; /* Makes the album-content stretch */
+        display: flex;
+        flex-direction: column;
+        justify-content: center; /* ⬅️ CENTER album image and info vertically */
+        align-items: center;
+        width: 100%;
+        gap: 10px;
+      }
+
+      .album-img {
+        width: 200px;
+        height: 200px;
+        object-fit: cover;
+        border-radius: 10px;
+        transition: filter 0.3s;
+      }
+
+      .album-img:hover {
+        filter: brightness(0.85);
+      }
+
+      .album-info {
+        text-align: center;
+      }
+
+      .generate-btn {
+        margin-top: 10px;
+        padding: 8px 20px;
+        border: 2px dashed #555;
+        background: transparent;
+        cursor: pointer;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+      }
+
+      .generate-btn:hover {
+        background-color: #ddd;
+      }
     </style>
-</head>
+  </head>
 
-<body>
+  <body>
     <div class="sidebar">
-        <div class="logo">lamp logo here</div>
-        <div class="nav">
-            <a href="#">home</a>
-            <a href="#">explore</a>
-            <a href="#">library</a>
-            <a href="#">threads</a>
-        </div>
+      <div class="logo">lamp logo here</div>
+      <div class="nav">
+        <a href="/home">home</a>
+        <a href="#">explore</a>
+        <a href="#">library</a>
+        <a href="#">threads</a>
+      </div>
     </div>
 
     <div class="content">
-        <div style="display: flex; gap: 40px;">
-            <!-- Album of the Day -->
-            <div class="album-box" onclick="showModal('<%= album.images[0] ? album.images[0].url : '' %>','<%= album.name %>','<%= album.artists[0].name %>','<%= album.release_date %>','<%= album.total_tracks %>','<%= album.external_urls.spotify %>')">
-                <h2>Album of the Day</h2>
-                <img src="<%= album.images[0] ? album.images[0].url : '' %>" alt="Album Cover" width="200" style="border-radius: 10px;"><br>
-                <strong><%= album.name %></strong><br>
-                by <%= album.artists[0].name %><br>
-                <small>Released on <%= album.release_date %></small>
+      <div class="albums-container">
+        <!-- Album of the Day -->
+        <div class="album-box">
+          <h2>Album of the Day</h2>
+          <div class="album-content">
+            <a href="/album/<%= album.id %>">
+              <img
+                src="<%= album.images[0] ? album.images[0].url : '' %>"
+                alt="Album Cover"
+                class="album-img"
+              />
+            </a>
+            <div class="album-info">
+              <strong><%= album.name %></strong><br />
+              by <%= album.artists[0].name %><br />
+              <small>Released on <%= album.release_date %></small>
             </div>
+          </div>
+        </div>
 
-            <!-- Random Album -->
-            <div class="album-box">
-                <h2>Random Album</h2>
-                <div onclick="showModal('<%= randomAlbum.images[0] ? randomAlbum.images[0].url : '' %>','<%= randomAlbum.name %>','<%= randomAlbum.artists[0].name %>','<%= randomAlbum.release_date %>','<%= randomAlbum.total_tracks %>','<%= randomAlbum.external_urls.spotify %>')" style="cursor:pointer;">
-                    <img src="<%= randomAlbum.images[0] ? randomAlbum.images[0].url : '' %>" alt="Album Cover" width="200" style="border-radius: 10px;"><br>
-                    <strong><%= randomAlbum.name %></strong><br>
-                    by <%= randomAlbum.artists[0].name %><br>
-                    <small>Released on <%= randomAlbum.release_date %></small><br><br>
-                </div>
-
-                <form action="/home" method="GET">
-                    <button type="submit" style="margin-top: 10px; padding: 5px 15px; border: 1px dashed #555; background: transparent; cursor: pointer;">generate</button>
-                </form>
+        <!-- Random Album Section (box + generate button) -->
+        <div class="album-section">
+          <div class="album-box">
+            <h2>Random Album</h2>
+            <div class="album-content">
+              <a href="/album/<%= randomAlbum.id %>">
+                <img
+                  src="<%= randomAlbum.images[0] ? randomAlbum.images[0].url : '' %>"
+                  alt="Album Cover"
+                  class="album-img"
+                />
+              </a>
+              <div class="album-info">
+                <strong><%= randomAlbum.name %></strong><br />
+                by <%= randomAlbum.artists[0].name %><br />
+                <small>Released on <%= randomAlbum.release_date %></small>
+              </div>
             </div>
+          </div>
+
+          <!-- ✅ Generate button neatly under random album -->
+          <form action="/home" method="GET">
+            <button type="submit" class="generate-btn">
+              generate new random album
+            </button>
+          </form>
         </div>
+      </div>
     </div>
-
-    <!-- Popup Modal -->
-    <div id="albumModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); justify-content:center; align-items:center;">
-        <div style="background:white; padding:20px; border-radius:10px; position:relative; width:300px; text-align:center;">
-            <button onclick="closeModal()" style="position:absolute; top:10px; right:10px; border:none; background:none; cursor:pointer;">X</button>
-            <img id="modalImage" src="" alt="Album Cover" width="200" style="border-radius:10px;"><br><br>
-            <strong id="modalName"></strong><br>
-            by <span id="modalArtist"></span><br>
-            <small>Released: <span id="modalDate"></span></small><br>
-            <small>Total Tracks: <span id="modalTracks"></span></small><br><br>
-            <a id="modalLink" href="" target="_blank">Open in Spotify</a>
-        </div>
-    </div>
-
-    <script>
-        function showModal(image, name, artist, date, tracks, link) {
-            document.getElementById('modalImage').src = image;
-            document.getElementById('modalName').innerText = name;
-            document.getElementById('modalArtist').innerText = artist;
-            document.getElementById('modalDate').innerText = date;
-            document.getElementById('modalTracks').innerText = tracks;
-            document.getElementById('modalLink').href = link;
-            document.getElementById('albumModal').style.display = 'flex';
-        }
-
-        function closeModal() {
-            document.getElementById('albumModal').style.display = 'none';
-        }
-    </script>
-</body>
-
+  </body>
 </html>
