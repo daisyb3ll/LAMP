@@ -206,3 +206,33 @@ app.get('/album/:id', async (req, res) => {
     res.status(500).send('Album not found');
   }
 });
+
+// Explore Page Route
+let currentOffset = 0;
+
+app.get('/explore', async (req, res) => {
+  try {
+    const token = await getSpotifyToken();
+    const offset = parseInt(req.query.offset) || 0;
+
+    const response = await axios.get(
+      `https://api.spotify.com/v1/browse/new-releases?limit=20&offset=${offset}`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
+
+    const albums = response.data.albums.items;
+
+    // If it's an AJAX request (for infinite scroll)
+    if (req.xhr || req.headers.accept.indexOf('json') > -1) {
+      return res.json(albums);
+    }
+
+    // First load
+    res.render('explore', { albums });
+  } catch (error) {
+    console.error('❌ Error loading explore albums:', error.message);
+    res.status(500).send('Error loading explore page');
+  }
+});

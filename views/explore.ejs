@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>LAMP - Explore</title>
+    <link
+      rel="icon"
+      type="image/png"
+      href="/images/transperent-lamp-cd.png"
+      sizes="32x32"
+    />
+    <link rel="stylesheet" href="/css/styles.css" />
+
+    <!-- Fonts -->
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Bungee+Tint&family=Chokokutai&family=Comfortaa:wght@300..700&family=Coral+Pixels&family=Dongle&family=Gaegu&family=IM+Fell+Double+Pica:ital@0;1&family=Jersey+15&family=Kirang+Haerang&family=Lacquer&family=Lexend+Deca:wght@100..900&family=Rubik+Dirt&family=Special+Elite&family=Syne+Mono&family=Tiny5&display=swap');
+    </style>
+
+    <style>
+      body {
+        margin: 0;
+        font-family: 'Lexend Deca', sans-serif;
+        display: flex;
+        overflow: hidden;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      .sidebar {
+        width: 180px;
+        background-color: #f4f4f4;
+        height: 100vh;
+        position: fixed;
+        top: 0;
+        left: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .logo img {
+        width: 100%;
+        margin-bottom: 20px;
+      }
+
+      .nav {
+        padding: 0 !important;
+        margin: 0 !important;
+      }
+
+      .nav a {
+        font-family: 'Coral Pixels', monospace !important;
+        font-size: 16px !important;
+        font-weight: bold !important;
+        display: block;
+        margin: 4px 0 !important;
+        line-height: 1 !important;
+        color: black !important;
+        text-decoration: none !important;
+      }
+
+      .content-wrapper {
+        margin-left: 180px;
+        height: 100vh;
+        overflow-y: auto;
+        width: calc(100% - 180px);
+        padding: 40px;
+        box-sizing: border-box;
+      }
+
+      h1 {
+        font-size: 28px;
+        margin: 0 0 30px;
+        text-align: center;
+        font-family: 'Coral Pixels', monospace; /* DIGITAL FONT */
+      }
+
+      .album-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 30px;
+        justify-items: center;
+        margin-top: 20px;
+      }
+
+      .album-card {
+        text-align: center;
+        width: 100%;
+        max-width: 200px;
+      }
+
+      .album-card img {
+        width: 100%;
+        aspect-ratio: 1 / 1;
+        object-fit: cover;
+        border-radius: 8px;
+      }
+
+      .album-title {
+        margin-top: 10px;
+        font-weight: bold;
+        font-size: 14px;
+        font-family: 'Coral Pixels', monospace; /* DIGITAL FONT */
+      }
+
+      .album-card a {
+        text-decoration: none;
+        color: black;
+        font-family: 'Coral Pixels', monospace; /* DIGITAL FONT */
+      }
+
+      #loader {
+        text-align: center;
+        margin: 40px 0;
+        color: #666;
+        font-size: 14px;
+        font-family: 'Coral Pixels', monospace; /* DIGITAL FONT */
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Sidebar (copied from homepage) -->
+    <div class="sidebar">
+      <div class="logo">
+        <img src="/images/transperent-lamp-cd.png" alt="lamp logo" />
+      </div>
+      <div class="nav">
+        <a href="/home">home</a>
+        <a href="/explore">explore</a>
+        <a href="#">library</a>
+        <a href="#/about.ejs">about</a>
+      </div>
+    </div>
+
+    <!-- Main content -->
+    <div class="content-wrapper">
+      <h1>Explore Albums</h1>
+      <div id="album-grid" class="album-grid">
+        <% albums.forEach(album => { %>
+        <div class="album-card">
+          <a href="/album/<%= album.id %>">
+            <img
+              src="<%= album.images[0]?.url || '/images/default-album.png' %>"
+              alt="<%= album.name %>"
+            />
+            <div class="album-title"><%= album.name %></div>
+          </a>
+        </div>
+        <% }) %>
+      </div>
+
+      <div id="loader">Loading more albums...</div>
+    </div>
+
+    <!-- Infinite Scroll Script -->
+    <script>
+      let offset = 20;
+      let loading = false;
+
+      async function loadMore() {
+        if (loading) return;
+        loading = true;
+
+        try {
+          const res = await fetch(`/explore?offset=${offset}`, {
+            headers: { Accept: 'application/json' },
+          });
+          const data = await res.json();
+
+          if (data.length === 0) {
+            document.getElementById('loader').style.display = 'none';
+            return;
+          }
+
+          const grid = document.getElementById('album-grid');
+          data.forEach((album) => {
+            const div = document.createElement('div');
+            div.className = 'album-card';
+            div.innerHTML = `
+              <a href="/album/${album.id}">
+                <img src="${
+                  album.images[0]?.url || '/images/default-album.png'
+                }" alt="${album.name}">
+                <div class="album-title">${album.name}</div>
+              </a>
+            `;
+            grid.appendChild(div);
+          });
+
+          offset += 20;
+          loading = false;
+        } catch (err) {
+          console.error(err);
+          document.getElementById('loader').textContent =
+            'Error loading albums.';
+        }
+      }
+
+      document
+        .querySelector('.content-wrapper')
+        .addEventListener('scroll', () => {
+          const content = document.querySelector('.content-wrapper');
+          if (
+            content.scrollTop + content.clientHeight >=
+            content.scrollHeight - 100
+          ) {
+            loadMore();
+          }
+        });
+    </script>
+  </body>
+</html>
