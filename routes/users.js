@@ -1,63 +1,62 @@
 const express = require('express');
-const User = require('../models/User');
 const router = express.Router();
-
-// TEMPORARY user for testing4
-const tempUser = {
-    username: 'flappy',
-    password: 'bird' // plaintext for demo ONLY
-};
-
-// Show login form
-router.get('/login', (req, res) => {
-    res.render('login', { error: null });
-});
-
-
-/**
- * @swagger
- * /users/signup:
- *   post:
- *     summary: Create a new user
- *     tags:
- *       - Users
- *     requestBody:
- *       required: true
- *       content:
- *         application/x-www-form-urlencoded:
- *           schema:
- *             $ref: '#/components/schemas/User'
- *     responses:
- *       302:
- *         description: Redirect to /home on success
- *       400:
- *         description: Validation error
- */
-
-
-// Handle login
-router.post('/login', (req, res) => {
-    const { username, password } = req.body;
-
-    if (username !== tempUser.username || password !== tempUser.password) {
-        return res.render('login', { error: 'Incorrect username or password.' });
-    }
-
-    res.redirect('/home');
-});
-
+const User = require('../models/User');
 
 // Show signup form
 router.get('/signup', (req, res) => {
-    res.render('signup');
+  res.render('signup');
 });
 
 // Handle signup
 router.post('/signup', async (req, res) => {
-    const { username, password } = req.body;
-    const newUser = new User({ username, password });
+  const { username, password, password_confirm, email } = req.body;
+
+  if (password !== password_confirm) {
+    return res.status(400).send('❌ Passwords do not match.');
+  }
+
+  try {
+    const existingUser = await User.findOne({ username });
+    if (existingUser) {
+      return res.status(409).send('❌ Username already exists.');
+    }
+
+    const newUser = new User({ username, password, email });
     await newUser.save();
+
+    // 🔁 Redirect to login after successful signup
+    res.redirect('/users/login');
+  } catch (err) {
+    console.error('❌ Error during signup:', err);
+    res.status(500).send('Error creating user');
+  }
+});
+
+// Show login form
+router.get('/login', (req, res) => {
+  res.render('login', { error: null });
+});
+
+// Handle login
+router.post('/login', async (req, res) => {
+  const { username, password } = req.body;
+
+  try {
+    const user = await User.findOne({ username });
+    if (!user) {
+      return res.render('login', { error: 'Incorrect username or password.' });
+    }
+
+    const isMatch = await user.comparePassword(password);
+    if (!isMatch) {
+      return res.render('login', { error: 'Incorrect username or password.' });
+    }
+
     res.redirect('/home');
+  } catch (err) {
+    console.error('❌ Login error:', err);
+    res.status(500).send('Login failed');
+  }
 });
 
 module.exports = router;
