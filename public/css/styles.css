@@ -1,21 +1,30 @@
-/* styling by @daisy */
+* {
+    box-sizing: border-box;
+}
+
 body {
-    font-family: 'Coral Pixels';
+    font-family: 'Coral Pixels', sans-serif;
     margin: 0;
-    display: flex;
-    height: 100vh;
+    display: block;
+    height: auto;
+    overflow-x: hidden;
 }
 
 /* Sidebar */
 .sidebar {
-    width: 200px;
-    background: #f5f5f5;
-    padding: 20px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 180px;
+    height: 100vh;
+    background-color: #f5f5f5;
     display: flex;
     flex-direction: column;
     align-items: center;
+    padding: 20px;
     border-right: 2px solid #ccc;
 }
+
 .fixed-logo {
     position: fixed;
     top: 10px;
@@ -26,18 +35,21 @@ body {
 .logo img {
     height: 4rem;
 }
+
 .nav {
     display: flex;
     flex-direction: column;
     gap: 15px;
-    text-align: left;
     width: 100%;
+    padding-left: 20px;
 }
 
 .nav a {
     text-decoration: none;
     color: black;
     font-weight: bold;
+    font-family: 'Coral Pixels', monospace;
+    font-size: 16px;
 }
 
 .nav a:hover {
@@ -46,25 +58,99 @@ body {
 
 /* Main Content */
 .content {
-    flex: 1;
+    width: 100%;
+    max-width: 1000px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+}
+
+.content.album-view {
+    display: flex;
+    flex-direction: row;
+    /* side by side */
+    justify-content: center;
+    align-items: flex-start;
+    gap: 50px;
+    padding: 40px;
+}
+/* Album Art */
+.album-art {
+    width: 290px;
+    height: 290px;
     display: flex;
     justify-content: center;
     align-items: center;
+    position: relative;
+    background: transparent;
+    overflow: visible;
 }
 
-/* Album boxes */
-.album-box {
-    border: 2px dashed #888;
+.album-art img {
+    width: 300px;
+    height: 300px;
+    object-fit: cover;
+    border-radius: 5%;
+    box-shadow: 0 0 10px rgb(207, 207, 207);
+    
+}
+
+/* Album Details */
+.album-details {
+    border: 2px solid rgb(207, 207, 207);
+    padding: 20px;
     border-radius: 10px;
-    padding: 30px;
-    text-align: center;
-    transition: background-color 0.3s, border-color 0.3s;
+    width: 350px;
+    height: 350px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
 }
 
-.album-box:hover {
-    background-color: #f0f0f0;
-    border-color: #555;
-    cursor: pointer;
+.album-details h3 {
+    margin: 0 0 10px;
+    font-size: 18px;
+}
+.popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.popup-box {
+    background: white;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+}
+
+
+.album-img {
+    max-width: 250px;
+    max-height: 250px;
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-radius: 8px;
+    display: block;
+    margin: 0 auto;
+
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 8px;
+}
+
+.album-box:hover .album-img {
+    transform: scale(1.05);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
 .album-box h2 {
@@ -118,4 +204,466 @@ body {
     background: none;
     font-size: 18px;
     cursor: pointer;
+}
+.modal-close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.generate-btn {
+    background: none;
+    border: none;
+    color: rgb(0, 86, 184);
+    /* or any base color you like */
+    font-family: 'Source Serif 4', monospace;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 0;
+    text-decoration: underline;
+    transition: color 0.3s ease;
+}
+
+.generate-btn:hover {
+    color: rgb(255, 0, 0);
+    /* or your preferred hover color */
+}
+.songs {
+    font-family: "Sans serif";
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    font-size: 14px;
+    color: green;
+    max-height: 120px;
+    overflow-y: auto;
+}
+
+.rating {
+    font-family: 'Arial Black';
+    font-size: 32px;
+    font-weight: bold;
+    color: hotpink;
+}
+
+.extra-info {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    font-size: 10px;
+    text-align: right;
+    color: black;
+}
+
+/* CD Stack */
+.cd-stack {
+    position: relative;
+    width: 300px;
+    height: 300px;
+    animation: spin 8s linear infinite;
+}
+
+.cd-base {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+}
+
+.cd-overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    /* -webkit-mask-image: url('../images/cd-path.svg');
+    mask-image: url('../images/cd-path.svg'); */
+    -webkit-mask-size: contain;
+    mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    mask-position: center;
+    overflow: hidden;
+    z-index: 0;
+}
+
+.masked-album {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Album Box */
+.album-box {
+    border-radius: 10px;
+    padding: 30px;
+    text-align: center;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+
+.album-box:hover {
+    background-color: #f0f0f0;
+    cursor: pointer;
+}
+
+.album-box h2 {
+    margin-bottom: 20px;
+}
+
+.album-placeholder {
+    width: 200px;
+    height: 200px;
+    border: 2px solid #555;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+    background: #eee;
+}
+
+.album-placeholder::before {
+    content: "album";
+    color: #555;
+}
+
+.explore-button {
+    background-color: black;
+    color: white;
+    font-family: 'Lexend Deca';
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background 0.3s ease;
+}
+
+.explore-button:hover {
+    background-color: #333;
+}
+
+.explore-section {
+    padding: 40px;
+    text-align: center;
+}
+
+.explore-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 30px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.explore-album img {
+    width: 100%;
+    border-radius: 8px;
+}
+
+.explore-album p {
+    margin-top: 8px;
+    font-weight: bold;
+    color: #333;
+}
+/* animation */
+.fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+.fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+
+/* explore css */
+
+.album-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    justify-items: center;
+    margin-top: 20px;
+}
+
+.album-card {
+    text-align: center;
+    width: 100%;
+    max-width: 200px;
+}
+
+.album-card img {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.album-title {
+    margin-top: 10px;
+    font-weight: bold;
+    font-size: 14px;
+    font-family: 'Coral Pixels', monospace;
+    /* DIGITAL FONT */
+}
+
+.album-card a {
+    text-decoration: none;
+    color: black;
+    font-family: 'Coral Pixels', monospace;
+    /* DIGITAL FONT */
+}
+
+.page-container {
+    display: flex;
+    flex-direction: column;
+    margin-left: 180px;
+    /* account for fixed sidebar */
+    min-height: 100vh;
+}
+
+.content-wrapper {
+    flex: 1;
+    padding: 40px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+footer {
+    text-align: center;
+    padding: 1em 0;
+    background: #f4f4f4;
+    font-family: 'Coral Pixels', monospace;
+    width: 100%;
+}
+
+/* Home-specific content */
+.home-page {
+    margin-left: 180px;
+    /* Account for sidebar */
+    padding: 60px 20px;
+    display: flex;
+    justify-content: center;
+}
+
+/* Album box container */
+.album-view-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 40px;
+    max-width: 1000px;
+    width: 100%;
+}
+
+.album-page .content {
+    display: flex;
+    justify-content:space-evenly;
+    align-items: center;
+    /* fix vertical centering */
+    height: 100vh;
+    /* force vertical centering in viewport */
+    margin-left: 180px;
+    padding: 0 20px;
+}
+
+.album-page .album-view-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* ✅ vertical centering */
+    margin-left: 25em;
+    /* account for sidebar */
+    height: 100vh;
+    /* ✅ take full viewport height */
+    padding: 0 100px;
+    box-sizing: border-box;
+}
+
+.masked-album-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.album-case-stack {
+    width: 180px;
+    height: 180px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.album-case-inner {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.album-case-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    z-index: 0;
+}
+.cd-case-wrapper {
+    position: relative;
+    width: 180px;
+    height: 180px;
+}
+
+.album-art-background {
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    border-radius: 4px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+}
+.cd-case {
+    position: relative;
+    width: 180px;
+    height: 180px;
+    margin: 0 auto;
+}
+
+.cd-case-bg,
+.cd-case-overlay,
+.album-mask {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+/* Background CD case (e.g., empty jewel case look) */
+.cd-case-bg {
+    z-index: 1;
+}
+
+/* Masking layer: album art in shape */
+.album-mask {
+    z-index: 2;
+    position: absolute;
+    top: 8%;
+    left: 8%;
+    width: 84%;
+    height: 84%;
+    -webkit-mask-image: url('/images/asset-4.svg');
+    mask-image: url('/images/asset-4.svg');
+    -webkit-mask-size: cover;
+    mask-size: cover;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    mask-position: center;
+    overflow: hidden;
+}
+
+.masked-album-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border-radius: 4px;
+}
+
+/* Overlay shine or plastic glare */
+.cd-case-overlay {
+    z-index: 3;
+    pointer-events: none;
+}
+
+/* hover animations */
+.album-card:hover .cd-case {
+    transform: scale(1.05);
+    transition: transform 0.3s ease;
+}
+
+.album-card:hover .cd-case-overlay {
+    opacity: 0.6;
+    filter: brightness(1.2);
+    transition: all 0.3s ease;
+}
+.album-card:hover .cd-case {
+    transform: rotate(-2deg) scale(1.03);
+    transition: transform 0.3s ease-in-out;
+}
+.cd-case {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.album-card:hover .cd-case {
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+}
+
+.cd-player-stack {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+/* CD artwork spinning underneath */
+.spinning-cd {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    animation: spin 6s linear infinite;
+    z-index: 1;
+    overflow: hidden;
+    border-radius: 50%;
+    /* mask-image: url('/images/cd-path.svg');
+    -webkit-mask-image: url('/images/cd-path.svg'); */
+    mask-size: cover;
+    -webkit-mask-size: cover;
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
+    mask-position: center;
+    -webkit-mask-position: center;
+}
+
+/* Image inside the spinning mask */
+.spinning-cd img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+/* Static CD player overlay */
+.cd-player-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    pointer-events: none;
+    object-fit: contain;
 }

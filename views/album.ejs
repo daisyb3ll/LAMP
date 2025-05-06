@@ -1,184 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>LAMP - Album</title>
-    <link
-      rel="icon"
-      type="image/png"
-      href="/images/transperent-lamp-cd.png"
-      sizes="32x32"
-    />
-    <style>
-      @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Bungee+Tint&family=Chokokutai&family=Comfortaa:wght@300..700&family=Coral+Pixels&family=Dongle&family=Gaegu&family=IM+Fell+Double+Pica:ital@0;1&family=Jersey+15&family=Kirang+Haerang&family=Lacquer&family=Lexend+Deca:wght@100..900&family=Rubik+Dirt&family=Special+Elite&family=Syne+Mono&family=Tiny5&display=swap');
 
-      * {
-        box-sizing: border-box;
-      }
-
-      body {
-        font-family: 'Lexend Deca', sans-serif;
-        margin: 0;
-        display: flex;
-        height: 100vh;
-        overflow: hidden;
-      }
-
-      .sidebar {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 180px;
-        height: 100vh;
-        background-color: #f4f4f4;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-      }
-
-      .logo img {
-        width: 30%;
-        margin: 20px 0;
-      }
-
-      .nav {
-        display: flex;
-        flex-direction: column;
-        gap: 6px;
-        width: 100%;
-        padding-left: 20px;
-      }
-
-      .nav a {
-        text-decoration: none;
-        color: black;
-        font-weight: bold;
-        font-family: 'Coral Pixels', monospace;
-        font-size: 16px;
-      }
-
-      .nav a:hover {
-        text-decoration: underline;
-      }
-
-      .content {
-        margin-left: 180px;
-        flex: 1;
-        overflow-y: auto;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 50px;
-        padding: 40px;
-      }
-
-      .album-art {
-        border: 2px dashed #555;
-        width: 350px;
-        height: 350px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background: #ddd;
-        border-radius: 10px;
-        position: relative;
-      }
-
-      .album-art img {
-        width: 300px;
-        height: 300px;
-        border-radius: 50%;
-        object-fit: cover;
-      }
-
-      .album-details {
-        border: 2px solid #555;
-        padding: 20px;
-        border-radius: 10px;
-        width: 350px;
-        height: 350px;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        position: relative;
-      }
-
-      .album-details h3 {
-        margin: 0 0 10px;
-        font-size: 18px;
-        color: red;
-      }
-
-      .songs {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 12px;
-        font-size: 14px;
-        color: green;
-        max-height: 120px;
-        overflow-y: auto;
-      }
-
-      .rating {
-        font-size: 32px;
-        font-weight: bold;
-        color: hotpink;
-      }
-
-      .extra-info {
-        position: absolute;
-        bottom: 20px;
-        right: 20px;
-        font-size: 10px;
-        text-align: right;
-        color: black;
-      }
+<head>
+  <meta charset="UTF-8" />
+  <title>LAMP - Album</title>
+  <link rel="icon" type="image/png" href="/images/transperent-lamp-cd.png" sizes="32x32" />
+  <link rel="stylesheet" href="/css/styles.css" />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Bungee+Tint&family=Chokokutai&family=Comfortaa:wght@300..700&family=Coral+Pixels&family=Dongle&family=Gaegu&family=IM+Fell+Double+Pica:ital@0;1&family=Jersey+15&family=Kirang+Haerang&family=Lacquer&family=Lexend+Deca:wght@100..900&family=Rubik+Dirt&family=Special+Elite&family=Syne+Mono&family=Tiny5&display=swap');
+    @import url("https://use.typekit.net/ldr5vzi.css");
     </style>
-  </head>
+</head>
 
-  <body>
-    <!-- Sidebar -->
-    <div class="sidebar">
-      <div class="logo">
-        <img src="/images/transperent-lamp-cd.png" alt="lamp logo" />
-      </div>
+<body class="album-page">
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="logo">
+      <img src="/images/transperent-lamp-cd.png" alt="lamp logo" />
+    </div>
 
-      <div class="nav">
-        <a href="/home">home</a>
-        <a href="/explore">explore</a>
-        <a href="#">library</a>
-        <a href="#">threads</a>
+    <div class="nav">
+      <a href="/home">home</a>
+      <a href="/explore">explore</a>
+      <a href="#">library</a>
+      <a href="#">threads</a>
+    </div>
+  </div>
+
+  <div class="album-view-wrapper">
+    <div class="content album-view">
+      
+    <div class="album-art">
+      <div class="cd-player-stack">
+        <div class="spinning-cd">
+          <img src="<%= album.images[0] ? album.images[0].url : '/images/default-album.png' %>" alt="Spinning CD" />
+        </div>
+        <img src="/images/cd-player.svg" alt="CD Player" class="cd-player-overlay" />
       </div>
     </div>
 
-    <!-- Main Content -->
-    <div class="content">
-      <!-- Album Art -->
-      <div class="album-art">
-        <img
-          src="<%= album.images[0] ? album.images[0].url : '' %>"
-          alt="Album Art"
-        />
-      </div>
-
       <!-- Album Details -->
       <div class="album-details">
-        <h3><%= album.artists[0].name %></h3>
+        <h3>
+          <%= album.artists[0].name %>
+        </h3>
 
         <div class="songs">
           <% album.tracks.items.forEach(function(track) { %>
-          <div><%= track.name %></div>
-          <% }) %>
+            <div>
+              <%= track.name %>
+            </div>
+            <% }) %>
         </div>
 
         <div class="rating">RATING</div>
 
         <div class="extra-info">
           <div>TIME</div>
-          <div><%= album.release_date %></div>
+          <div>
+            <%= album.release_date %>
+          </div>
           <div>LISTENS</div>
         </div>
       </div>
     </div>
-  </body>
+  </div>
+</body>
+
 </html>

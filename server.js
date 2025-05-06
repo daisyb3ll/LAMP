@@ -5,6 +5,7 @@ const axios = require('axios');
 const ejs = require('ejs');
 const path = require('path');
 
+
 const swaggerJsDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 
@@ -215,24 +216,60 @@ app.get('/explore', async (req, res) => {
     const token = await getSpotifyToken();
     const offset = parseInt(req.query.offset) || 0;
 
-    const response = await axios.get(
-      `https://api.spotify.com/v1/browse/new-releases?limit=20&offset=${offset}`,
+    const newReleasesRes = await axios.get(
+      `https://api.spotify.com/v1/browse/new-releases?limit=50&offset=0`,
       {
         headers: { Authorization: `Bearer ${token}` },
       }
     );
 
-    const albums = response.data.albums.items;
+    const albums = newReleasesRes.data.albums.items;
 
-    // If it's an AJAX request (for infinite scroll)
+    const albumOfTheDay = albums[0];
+    const randomAlbum = albums[Math.floor(Math.random() * albums.length)];
+
+    // Handle infinite scroll fetch
     if (req.xhr || req.headers.accept.indexOf('json') > -1) {
-      return res.json(albums);
+      return res.json(albums.slice(offset, offset + 20));
     }
 
-    // First load
-    res.render('explore', { albums });
+    res.render('explore', { albums: albums.slice(0, 20), albumOfTheDay, randomAlbum });
   } catch (error) {
     console.error('❌ Error loading explore albums:', error.message);
     res.status(500).send('Error loading explore page');
   }
+});
+
+
+app.get('/enter', (req, res) => {
+  // Hardcoded dummy album
+  const album = {
+    id: "test-album-1",
+    name: "Fake Album of the Day",
+    images: [{ url: "/images/default-album.png" }],
+    artists: [{ name: "Fake Artist" }],
+    release_date: "2024-01-01",
+    tracks: { items: [{ name: "Song A" }, { name: "Song B" }] }
+  };
+
+  const randomAlbum = {
+    id: "test-album-2",
+    name: "Random Fake Album",
+    images: [{ url: "/images/default-album.png" }],
+    artists: [{ name: "Random Artist" }],
+    release_date: "2023-11-15",
+    tracks: { items: [{ name: "Random Song" }] }
+  };
+
+  const albums = Array.from({ length: 12 }).map((_, i) => ({
+    id: `dummy-${i}`,
+    name: `Album ${i + 1}`,
+    images: [{ url: "/images/default-album.png" }]
+  }));
+
+  res.render('enter', {
+    album,
+    randomAlbum,
+    albums
+  });
 });

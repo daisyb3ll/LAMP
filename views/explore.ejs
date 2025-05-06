@@ -1,215 +1,179 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>LAMP - Explore</title>
-    <link
-      rel="icon"
-      type="image/png"
-      href="/images/transperent-lamp-cd.png"
-      sizes="32x32"
-    />
-    <link rel="stylesheet" href="/css/styles.css" />
 
-    <!-- Fonts -->
-    <style>
-      @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Bungee+Tint&family=Chokokutai&family=Comfortaa:wght@300..700&family=Coral+Pixels&family=Dongle&family=Gaegu&family=IM+Fell+Double+Pica:ital@0;1&family=Jersey+15&family=Kirang+Haerang&family=Lacquer&family=Lexend+Deca:wght@100..900&family=Rubik+Dirt&family=Special+Elite&family=Syne+Mono&family=Tiny5&display=swap');
-    </style>
+<head>
+  <meta charset="UTF-8" />
+  <title>LAMP - Explore</title>
+  <link rel="icon" type="image/png" href="/images/transperent-lamp-cd.png" sizes="32x32" />
+  <link rel="stylesheet" href="/css/styles.css" />
 
-    <style>
-      body {
-        margin: 0;
-        font-family: 'Lexend Deca', sans-serif;
-        display: flex;
-        overflow: hidden;
-      }
+  <style>
+  @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Bungee+Tint&family=Chokokutai&family=Comfortaa:wght@300..700&family=Coral+Pixels&family=Darumadrop+One&family=Dongle&family=Doto:wght@100..900&family=Gaegu&family=IM+Fell+Double+Pica:ital@0;1&family=Jersey+15&family=Kirang+Haerang&family=Lacquer&family=Lexend+Deca:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Rubik+Dirt&family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&family=Special+Elite&family=Syne+Mono&family=Tiny5&display=swap');
+    * {
+      box-sizing: border-box;
+    }
+  </style>
+</head>
 
-      * {
-        box-sizing: border-box;
-      }
-
-      .sidebar {
-        width: 180px;
-        background-color: #f4f4f4;
-        height: 100vh;
-        position: fixed;
-        top: 0;
-        left: 0;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-      }
-
-      .logo img {
-        width: 100%;
-        margin-bottom: 20px;
-      }
-
-      .nav {
-        padding: 0 !important;
-        margin: 0 !important;
-      }
-
-      .nav a {
-        font-family: 'Coral Pixels', monospace !important;
-        font-size: 16px !important;
-        font-weight: bold !important;
-        display: block;
-        margin: 4px 0 !important;
-        line-height: 1 !important;
-        color: black !important;
-        text-decoration: none !important;
-      }
-
-      .content-wrapper {
-        margin-left: 180px;
-        height: 100vh;
-        overflow-y: auto;
-        width: calc(100% - 180px);
-        padding: 40px;
-        box-sizing: border-box;
-      }
-
-      h1 {
-        font-size: 28px;
-        margin: 0 0 30px;
-        text-align: center;
-        font-family: 'Coral Pixels', monospace; /* DIGITAL FONT */
-      }
-
-      .album-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 30px;
-        justify-items: center;
-        margin-top: 20px;
-      }
-
-      .album-card {
-        text-align: center;
-        width: 100%;
-        max-width: 200px;
-      }
-
-      .album-card img {
-        width: 100%;
-        aspect-ratio: 1 / 1;
-        object-fit: cover;
-        border-radius: 8px;
-      }
-
-      .album-title {
-        margin-top: 10px;
-        font-weight: bold;
-        font-size: 14px;
-        font-family: 'Coral Pixels', monospace; /* DIGITAL FONT */
-      }
-
-      .album-card a {
-        text-decoration: none;
-        color: black;
-        font-family: 'Coral Pixels', monospace; /* DIGITAL FONT */
-      }
-
-      #loader {
-        text-align: center;
-        margin: 40px 0;
-        color: #666;
-        font-size: 14px;
-        font-family: 'Coral Pixels', monospace; /* DIGITAL FONT */
-      }
-    </style>
-  </head>
-
-  <body>
-    <!-- Sidebar (copied from homepage) -->
-    <div class="sidebar">
-      <div class="logo">
-        <img src="/images/transperent-lamp-cd.png" alt="lamp logo" />
-      </div>
-      <div class="nav">
-        <a href="/home">home</a>
-        <a href="/explore">explore</a>
-        <a href="#">library</a>
-        <a href="#/about.ejs">about</a>
-      </div>
+<body>
+  <div class="sidebar">
+    <div class="logo">
+      <img src="/images/transperent-lamp-cd.png" alt="lamp logo" />
     </div>
+    <div class="nav">
+      <a href="/home">home</a>
+      <a href="/explore">explore</a>
+      <a href="/enter">library</a>
+      <a href="#/about.ejs">about</a>
+    </div>
+  </div>
 
-    <!-- Main content -->
+  <div class="page-container">
     <div class="content-wrapper">
-      <h1>Explore Albums</h1>
-      <div id="album-grid" class="album-grid">
-        <% albums.forEach(album => { %>
-        <div class="album-card">
-          <a href="/album/<%= album.id %>">
-            <img
-              src="<%= album.images[0]?.url || '/images/default-album.png' %>"
-              alt="<%= album.name %>"
-            />
-            <div class="album-title"><%= album.name %></div>
-          </a>
-        </div>
-        <% }) %>
-      </div>
+      <main class="content">
 
-      <div id="loader">Loading more albums...</div>
+        <!-- Welcome Modal -->
+        <div id="welcomeModal" class="popup-overlay">
+          <div class="popup-box" id="welcomeContent">
+            <div style="display: flex; gap: 40px;">
+              <a href="/album/<%= albumOfTheDay.id %>" style="text-decoration: none; color: inherit;">
+                <div class="album-box">
+                  <h2>Album of the Day</h2>
+                  <div class="album-content">
+                    <img src="<%= albumOfTheDay.images[0]?.url %>" class="album-img" />
+                    <div class="album-info">
+                      <strong>
+                        <%= albumOfTheDay.name %>
+                      </strong><br />
+                      by <%= albumOfTheDay.artists[0].name %><br />
+                        <small>Released on <%= albumOfTheDay.release_date %></small>
+                    </div>
+                  </div>
+                </div>
+              </a>
+
+              <a href="/album/<%= randomAlbum.id %>" style="text-decoration: none; color: inherit;">
+                <div class="album-box">
+                  <h2>Random Album</h2>
+                  <div class="album-content">
+                    <img src="<%= randomAlbum.images[0]?.url %>" class="album-img" />
+                    <div class="album-info">
+                      <strong>
+                        <%= randomAlbum.name %>
+                      </strong><br />
+                      by <%= randomAlbum.artists[0].name %><br />
+                        <small>Released on <%= randomAlbum.release_date %></small>
+                    </div>
+                  </div>
+                    <!-- ✨ Centered Form -->
+                    <form action="/home" method="GET" style="margin-top: 20px;">
+                      <button type="submit" class="generate-btn">generate new random album</button>
+                    </form>
+                    
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <h1>Explore Albums</h1>
+        <div id="album-grid" class="album-grid">
+          <% albums.forEach(album=> { %>
+            <div class="album-card">
+              <a href="/album/<%= album.id %>">
+                <div class="cd-case">
+                  <img src="/images/cd-case.svg" class="cd-case-bg" alt="CD case background" />
+                  <div class="album-mask">
+                    <img src="<%= album.images[0]?.url || '/images/default-album.png' %>" class="masked-album-img"
+                      alt="<%= album.name %>" />
+                  </div>
+                </div>
+                <div class="album-title">
+                  <%= album.name %>
+                </div>
+              </a>
+            </div>
+            <% }); %>
+        </div>
+
+        <div id="loader">Loading more albums...</div>
+      </main>
     </div>
 
-    <!-- Infinite Scroll Script -->
-    <script>
-      let offset = 20;
-      let loading = false;
+    <footer>
+      <section class="container">
+        <a href="/home">
+          <div class="logo">
+            <img src="/images/transperent-lamp-cd.png" alt="/LAMP logo" />
+          </div>
+        </a>
+        <p>xoxo sarah & daisy <br> /LAMP©2025</p>
+      </section>
+    </footer>
+  </div>
 
-      async function loadMore() {
-        if (loading) return;
-        loading = true;
-
-        try {
-          const res = await fetch(`/explore?offset=${offset}`, {
-            headers: { Accept: 'application/json' },
-          });
-          const data = await res.json();
-
-          if (data.length === 0) {
-            document.getElementById('loader').style.display = 'none';
-            return;
-          }
-
-          const grid = document.getElementById('album-grid');
-          data.forEach((album) => {
-            const div = document.createElement('div');
-            div.className = 'album-card';
-            div.innerHTML = `
-              <a href="/album/${album.id}">
-                <img src="${
-                  album.images[0]?.url || '/images/default-album.png'
-                }" alt="${album.name}">
-                <div class="album-title">${album.name}</div>
-              </a>
-            `;
-            grid.appendChild(div);
-          });
-
-          offset += 20;
-          loading = false;
-        } catch (err) {
-          console.error(err);
-          document.getElementById('loader').textContent =
-            'Error loading albums.';
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const modal = document.getElementById('welcomeModal');
+      modal.style.display = 'flex';
+      window.addEventListener('click', function (e) {
+        if (e.target === modal) {
+          modal.style.display = 'none';
         }
-      }
+      });
+    });
 
-      document
-        .querySelector('.content-wrapper')
-        .addEventListener('scroll', () => {
-          const content = document.querySelector('.content-wrapper');
-          if (
-            content.scrollTop + content.clientHeight >=
-            content.scrollHeight - 100
-          ) {
-            loadMore();
-          }
+    let offset = 20;
+    let loading = false;
+
+    async function loadMore() {
+      if (loading) return;
+      loading = true;
+
+      try {
+        const res = await fetch(`/explore?offset=${offset}`, {
+          headers: { Accept: 'application/json' },
         });
-    </script>
-  </body>
+        const data = await res.json();
+        if (data.length === 0) {
+          document.getElementById('loader').style.display = 'none';
+          return;
+        }
+
+        const grid = document.getElementById('album-grid');
+        data.forEach((album) => {
+          const div = document.createElement('div');
+          div.className = 'album-card';
+          div.innerHTML = `
+            <a href="/album/${album.id}">
+              <div class="cd-case">
+                <img src="/images/cd-case.svg" class="cd-case-bg" alt="CD background" />
+                <div class="album-mask">
+                  <img src="${album.images[0]?.url || '/images/default-album.png'}" class="masked-album-img" />
+                </div>
+                <img src="/images/cd-case-top.svg" class="cd-case-overlay" alt="CD overlay" />
+              </div>
+              <div class="album-title">${album.name}</div>
+            </a>
+          `;
+          grid.appendChild(div);
+        });
+
+        offset += 20;
+        loading = false;
+      } catch (err) {
+        console.error(err);
+        document.getElementById('loader').textContent = 'Error loading albums.';
+      }
+    }
+
+    document.querySelector('.content-wrapper').addEventListener('scroll', () => {
+      const content = document.querySelector('.content-wrapper');
+      if (content.scrollTop + content.clientHeight >= content.scrollHeight - 100) {
+        loadMore();
+      }
+    });
+  </script>
+</body>
+
 </html>
