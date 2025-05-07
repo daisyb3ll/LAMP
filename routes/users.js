@@ -1,62 +1,82 @@
 const express = require('express');
 const router = express.Router();
+const axios = require('axios');
 const User = require('../models/User');
 
-// Show signup form
-router.get('/signup', (req, res) => {
-  res.render('signup');
-});
-
-// Handle signup
-router.post('/signup', async (req, res) => {
-  const { username, password, password_confirm, email } = req.body;
-
-  if (password !== password_confirm) {
-    return res.status(400).send('❌ Passwords do not match.');
-  }
-
-  try {
-    const existingUser = await User.findOne({ username });
-    if (existingUser) {
-      return res.status(409).send('❌ Username already exists.');
+// ⛽ Utility to get Spotify token
+async function getSpotifyToken() {
+  const response = await axios.post(
+    'https://accounts.spotify.com/api/token',
+    new URLSearchParams({ grant_type: 'client_credentials' }),
+    {
+      headers: {
+        Authorization: `Basic ${Buffer.from(
+          `${process.env.SPOTIFY_CLIENT_ID}:${process.env.SPOTIFY_CLIENT_SECRET}`
+        ).toString('base64')}`,
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
     }
+  );
+  return response.data.access_token;
+}
 
-    const newUser = new User({ username, password, email });
-    await newUser.save();
+// ✅ GET: Show login form with Spotify album background
+router.get('/login', async (req, res) => {
+  try {
+    const token = await getSpotifyToken();
+    const response = await axios.get('https://api.spotify.com/v1/browse/new-releases?limit=30', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
-    // 🔁 Redirect to login after successful signup
-    res.redirect('/users/login');
+    const albums = response.data.albums.items.map(album => ({
+      name: album.name,
+      images: album.images,
+    }));
+
+    res.render('login', {
+      albums,
+      error: null,
+    });
   } catch (err) {
-    console.error('❌ Error during signup:', err);
-    res.status(500).send('Error creating user');
+    console.error('Error fetching albums:', err.message);
+    res.render('login', {
+      albums: [],
+      error: 'Could not load album art.',
+    });
   }
 });
 
-// Show login form
-router.get('/login', (req, res) => {
-  res.render('login', { error: null });
-});
-
-// Handle login
+// ✅ POST: Handle login form
 router.post('/login', async (req, res) => {
   const { username, password } = req.body;
 
   try {
     const user = await User.findOne({ username });
-    if (!user) {
-      return res.render('login', { error: 'Incorrect username or password.' });
+    if (!user || !(await user.comparePassword(password))) {
+      // Reload login form with error
+      const token = await getSpotifyToken();
+      const response = await axios.get('https://api.spotify.com/v1/browse/new-releases?limit=30', {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const albums = response.data.albums.items.map(album => ({
+        name: album.name,
+        images: album.images,
+      }));
+      return res.render('login', {
+        albums,
+        error: 'Incorrect username or password.',
+      });
     }
 
-    const isMatch = await user.comparePassword(password);
-    if (!isMatch) {
-      return res.render('login', { error: 'Incorrect username or password.' });
-    }
-
+    // ✅ Redirect to home if successful
     res.redirect('/home');
   } catch (err) {
-    console.error('❌ Login error:', err);
-    res.status(500).send('Login failed');
+    console.error('Login error:', err.message);
+    res.status(500).send('Server error during login');
   }
 });
 
 module.exports = router;
+

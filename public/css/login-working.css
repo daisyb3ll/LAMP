@@ -1,0 +1,99 @@
+body {
+    margin: 0;
+    font-family: 'Coral Pixels', sans-serif;
+    background: #ffffff;
+    overflow: hidden;
+    height: 100vh;
+    position: relative;
+}
+
+/* Login form wrapper */
+.signin-content {
+    position: absolute;
+    /* must be absolute to float on top */
+    top: 0;
+    left: 0;
+    z-index: 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100vh;
+}
+
+/* Login box styling */
+.login-box {
+    background: rgba(255, 255, 255, 0.95);
+    /* padding: 30px; */
+    border-radius: 12px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+    z-index:2;
+}
+
+.login-box input,
+.login-box button {
+    width: 75%;
+    margin: 12px auto;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    display: block;
+}
+
+.login-box button {
+    width: 50%;
+    background-color: rgb(196, 196, 196);
+    color: white;
+    cursor: pointer;
+}
+
+.login-box button:hover {
+    background-color: #001851;
+}
+
+.error {
+    color: red;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.album-scroller-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+}
+
+.album-scroller {
+    display: flex;
+    flex-wrap: wrap;
+    width: 400%;
+    /* wide enough to allow scrolling room */
+    height: 400%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0.08;
+    pointer-events: none;
+}
+
+.album-grid-tile {
+    width: 100px;
+    height: 100px;
+    margin: 5px;
+}
+
+.album-grid-tile img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.5;
+    pointer-events: none;
+}
