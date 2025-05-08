@@ -125,15 +125,15 @@ app.get('/save-top-tracks', async (req, res) => {
   }
 });
 
-// ✅ Check if 'routes/users.js' exists before importing
-try {
-  const userRoutes = require('./routes/users');
-  app.use('/users', userRoutes);
-} catch (error) {
-  console.error(
-    "⚠️ WARNING: 'routes/users.js' not found. Create the file to avoid errors."
-  );
-}
+// // ✅ Check if 'routes/users.js' exists before importing
+// try {
+//   const userRoutes = require('./routes/users');
+//   app.use('/users', userRoutes);
+// } catch (error) {
+//   console.error(
+//     "⚠️ WARNING: 'routes/users.js' not found. Create the file to avoid errors."
+//   );
+// }
 
 // ✅ Homepage Route
 app.get('/', (req, res) => {

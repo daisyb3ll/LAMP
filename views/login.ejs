@@ -29,6 +29,7 @@
     <!-- 🔧 LOGIN FORM - ensure this is here -->
     <div class="signin-content">
         <div class="login-box">
+            <h1>/LAMP</h1>
             <h2>Welcome Back</h2>
             <form action="/users/login" method="POST">
                 <input type="text" name="username" placeholder="Username" required />
@@ -41,6 +42,10 @@
                     </div>
                     <% } %>
             </form>
+            <p class="signup-link">
+                Don’t have an account?
+                <br><a href="/users/signup">Sign up here</a>
+            </p>
         </div>
     </div>
 </body>

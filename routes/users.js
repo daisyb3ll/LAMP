@@ -78,5 +78,11 @@ router.post('/login', async (req, res) => {
   }
 });
 
+// In your routes/users.js or similar:
+router.get('/signup', (req, res) => {
+  res.render('signup'); // Assuming signup.ejs or signup.html is in your views
+});
+
+
 module.exports = router;
 
