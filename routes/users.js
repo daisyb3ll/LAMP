@@ -24,13 +24,16 @@ async function getSpotifyToken() {
 router.get('/login', async (req, res) => {
   try {
     const token = await getSpotifyToken();
-    const response = await axios.get('https://api.spotify.com/v1/browse/new-releases?limit=30', {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response = await axios.get(
+      'https://api.spotify.com/v1/browse/new-releases?limit=30',
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
 
-    const albums = response.data.albums.items.map(album => ({
+    const albums = response.data.albums.items.map((album) => ({
       name: album.name,
       images: album.images,
     }));
@@ -57,10 +60,13 @@ router.post('/login', async (req, res) => {
     if (!user || !(await user.comparePassword(password))) {
       // Reload login form with error
       const token = await getSpotifyToken();
-      const response = await axios.get('https://api.spotify.com/v1/browse/new-releases?limit=30', {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      const albums = response.data.albums.items.map(album => ({
+      const response = await axios.get(
+        'https://api.spotify.com/v1/browse/new-releases?limit=30',
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      const albums = response.data.albums.items.map((album) => ({
         name: album.name,
         images: album.images,
       }));
@@ -83,6 +89,31 @@ router.get('/signup', (req, res) => {
   res.render('signup'); // Assuming signup.ejs or signup.html is in your views
 });
 
+// ✅ POST: Handle signup form
+router.post('/signup', async (req, res) => {
+  const { username, password, password_confirm, email } = req.body;
+
+  if (password !== password_confirm) {
+    return res.status(400).send('❌ Passwords do not match.');
+  }
+
+  try {
+    // Check if user exists
+    const existingUser = await User.findOne({ username });
+    if (existingUser) {
+      return res.status(400).send('❌ Username already taken.');
+    }
+
+    // Create new user
+    const newUser = new User({ username, password, email });
+    await newUser.save();
+
+    // Redirect to login page after signup
+    res.redirect('/users/login');
+  } catch (err) {
+    console.error('Signup error:', err.message);
+    res.status(500).send('❌ Error during signup.');
+  }
+});
 
 module.exports = router;
-
