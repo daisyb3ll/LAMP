@@ -77,7 +77,7 @@ router.post('/login', async (req, res) => {
     }
 
     // ✅ Redirect to home if successful
-    res.redirect('/home');
+    res.redirect('/explore');
   } catch (err) {
     console.error('Login error:', err.message);
     res.status(500).send('Server error during login');
