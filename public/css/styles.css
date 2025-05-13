@@ -447,8 +447,9 @@ body {
 
 footer {
   text-align: center;
+  padding-top: 10em;
   padding: 10px 0;
-  background: #f4f4f4;
+  background: #ffffff;
   font-family: 'Coral Pixels', monospace;
   font-size: 12px;
   line-height: 1.2;
