@@ -1,70 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-  <meta charset="UTF-8" />
-  <title>LAMP - Album</title>
-  <link rel="icon" type="image/png" href="/images/transperent-lamp-cd.png" sizes="32x32" />
-  <link rel="stylesheet" href="/css/styles.css" />
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Bungee+Tint&family=Chokokutai&family=Comfortaa:wght@300..700&family=Coral+Pixels&family=Dongle&family=Gaegu&family=IM+Fell+Double+Pica:ital@0;1&family=Jersey+15&family=Kirang+Haerang&family=Lacquer&family=Lexend+Deca:wght@100..900&family=Rubik+Dirt&family=Special+Elite&family=Syne+Mono&family=Tiny5&display=swap');
-    @import url("https://use.typekit.net/ldr5vzi.css");
+  <head>
+    <meta charset="UTF-8" />
+    <title>LAMP - Album</title>
+    <link
+      rel="icon"
+      type="image/png"
+      href="/images/transperent-lamp-cd.png"
+      sizes="32x32"
+    />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Bungee+Tint&family=Chokokutai&family=Comfortaa:wght@300..700&family=Coral+Pixels&family=Dongle&family=Gaegu&family=IM+Fell+Double+Pica:ital@0;1&family=Jersey+15&family=Kirang+Haerang&family=Lacquer&family=Lexend+Deca:wght@100..900&family=Rubik+Dirt&family=Special+Elite&family=Syne+Mono&family=Tiny5&display=swap');
+      @import url('https://use.typekit.net/ldr5vzi.css');
     </style>
-</head>
+  </head>
 
-<body class="album-page">
-  <!-- Sidebar -->
-  <div class="sidebar">
-    <div class="logo">
-      <img src="/images/transperent-lamp-cd.png" alt="lamp logo" />
-    </div>
+  <body class="album-page">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div class="logo">
+        <img src="/images/transperent-lamp-cd.png" alt="lamp logo" />
+      </div>
 
-    <div class="nav">
-      <a href="/home">home</a>
-      <a href="/explore">explore</a>
-      <a href="#">library</a>
-      <a href="#">threads</a>
-    </div>
-  </div>
-
-  <div class="album-view-wrapper">
-    <div class="content album-view">
-      
-    <div class="album-art">
-      <div class="cd-player-stack">
-        <div class="spinning-cd">
-          <img src="<%= album.images[0] ? album.images[0].url : '/images/default-album.png' %>" alt="Spinning CD" />
-        </div>
-        <img src="/images/cd-player.svg" alt="CD Player" class="cd-player-overlay" />
+      <div class="nav">
+        <a href="/explore">explore</a>
+        <a href="/enter">library</a>
+        <a href="/users/profile">profile</a>
+        <a href="#/about.ejs">about</a>
       </div>
     </div>
 
-      <!-- Album Details -->
-      <div class="album-details">
-        <h3>
-          <%= album.artists[0].name %>
-        </h3>
-
-        <div class="songs">
-          <% album.tracks.items.forEach(function(track) { %>
-            <div>
-              <%= track.name %>
+    <div class="album-view-wrapper">
+      <div class="content album-view">
+        <div class="album-art">
+          <div class="cd-player-stack">
+            <div class="spinning-cd">
+              <img
+                src="<%= album.images[0] ? album.images[0].url : '/images/default-album.png' %>"
+                alt="Spinning CD"
+              />
             </div>
-            <% }) %>
+            <img
+              src="/images/cd-player.svg"
+              alt="CD Player"
+              class="cd-player-overlay"
+            />
+          </div>
         </div>
 
-        <div class="rating">RATING</div>
+        <!-- Album Details -->
+        <div class="album-details">
+          <h3><%= album.artists[0].name %></h3>
 
-        <div class="extra-info">
-          <div>TIME</div>
-          <div>
-            <%= album.release_date %>
+          <div class="songs">
+            <% album.tracks.items.forEach(function(track) { %>
+            <div><%= track.name %></div>
+            <% }) %>
           </div>
-          <div>LISTENS</div>
+
+          <div class="rating">RATING</div>
+
+          <div class="extra-info">
+            <div>TIME</div>
+            <div><%= album.release_date %></div>
+            <div>LISTENS</div>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-</body>
-
+  </body>
 </html>

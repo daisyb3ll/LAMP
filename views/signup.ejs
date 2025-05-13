@@ -1,23 +1,46 @@
-<link rel="icon" type="image/png" href="/images/transperent-lamp-cd.png" sizes="32x32">
-<link rel="stylesheet" href="/css/signup.css">
+<link
+  rel="icon"
+  type="image/png"
+  href="/images/transperent-lamp-cd.png"
+  sizes="32x32"
+/>
+<link rel="stylesheet" href="/css/signup.css" />
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Bungee+Tint&family=Chokokutai&family=Comfortaa:wght@300..700&family=Coral+Pixels&family=Dongle&family=Gaegu&family=IM+Fell+Double+Pica:ital@0;1&family=Jersey+15&family=Kirang+Haerang&family=Lacquer&family=Lexend+Deca:wght@100..900&family=Rubik+Dirt&family=Special+Elite&family=Syne+Mono&family=Tiny5&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Bungee+Tint&family=Chokokutai&family=Comfortaa:wght@300..700&family=Coral+Pixels&family=Dongle&family=Gaegu&family=IM+Fell+Double+Pica:ital@0;1&family=Jersey+15&family=Kirang+Haerang&family=Lacquer&family=Lexend+Deca:wght@100..900&family=Rubik+Dirt&family=Special+Elite&family=Syne+Mono&family=Tiny5&display=swap');
 </style>
 
 <div class="container">
-    <div class="image-box">
-        <p>Image Placeholder</p>
-    </div>
+  <div class="image-box">
+    <p>Image Placeholder</p>
+  </div>
 
-    <div class="form-box">
-        <h1>LAMP</h1>
-        <p>create account</p>
-        <form action="/users/signup" method="POST">
-            <input name="username" placeholder="username" required><br>
-            <input type="password" name="password" placeholder="password" required><br>
-            <input type="password" name="password_confirm" placeholder="password again" required><br>
-            <input type="email" name="email" placeholder="email@email.com" required><br>
-            <button type="submit">create</button>
-        </form>
-    </div>
+  <div class="form-box">
+    <h1>LAMP</h1>
+    <p>create account</p>
+    <form action="/users/signup" method="POST">
+      <input name="username" placeholder="username" required /><br />
+      <input
+        type="password"
+        name="password"
+        placeholder="password"
+        required
+      /><br />
+      <input
+        type="password"
+        name="password_confirm"
+        placeholder="password again"
+        required
+      /><br />
+      <input
+        type="email"
+        name="email"
+        placeholder="email@email.com"
+        required
+      /><br />
+      <button type="submit">create</button>
+      <% if (error) { %>
+      <div class="error"><%= error %></div>
+      <% } %>
+    </form>
+  </div>
 </div>

@@ -52,13 +52,13 @@ router.get('/login', async (req, res) => {
 });
 
 // ✅ POST: Handle login form
+// ✅ POST: Handle login form
 router.post('/login', async (req, res) => {
   const { username, password } = req.body;
 
   try {
     const user = await User.findOne({ username });
     if (!user || !(await user.comparePassword(password))) {
-      // Reload login form with error
       const token = await getSpotifyToken();
       const response = await axios.get(
         'https://api.spotify.com/v1/browse/new-releases?limit=30',
@@ -76,7 +76,14 @@ router.post('/login', async (req, res) => {
       });
     }
 
-    // ✅ Redirect to home if successful
+    // ✅ ✅ ✅ RIGHT HERE: Save user to session
+    req.session.user = {
+      _id: user._id,
+      username: user.username,
+      email: user.email,
+    };
+
+    // ✅ Redirect to Explore page
     res.redirect('/explore');
   } catch (err) {
     console.error('Login error:', err.message);
@@ -113,6 +120,19 @@ router.post('/signup', async (req, res) => {
   } catch (err) {
     console.error('Signup error:', err.message);
     res.status(500).send('❌ Error during signup.');
+  }
+});
+
+// ✅ GET: Profile page (only for logged-in users)
+router.get('/profile', async (req, res) => {
+  if (!req.session.user) return res.redirect('/users/login');
+
+  try {
+    const user = await User.findById(req.session.user._id);
+    res.render('profile', { user });
+  } catch (err) {
+    console.error('Error loading profile:', err.message);
+    res.status(500).send('Error loading profile');
   }
 });
 

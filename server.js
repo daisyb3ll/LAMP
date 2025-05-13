@@ -10,6 +10,9 @@ const swaggerUi = require('swagger-ui-express');
 
 const app = express(); // Initialize Express
 
+const session = require('express-session');
+const MongoStore = require('connect-mongo');
+
 // ✅ Swagger setup
 const swaggerOptions = {
   swaggerDefinition: {
@@ -44,6 +47,17 @@ app.use((req, res, next) => {
 const dbURL = process.env.MONGO_URI || 'mongodb://localhost:27017/defaultDB';
 console.log('🔌 Trying to connect to MongoDB:', dbURL);
 
+// Then set up the session
+app.use(
+  session({
+    secret: 'super-secret-key',
+    resave: false,
+    saveUninitialized: false,
+    store: MongoStore.create({ mongoUrl: dbURL }),
+    cookie: { maxAge: 1000 * 60 * 60 * 24 }, // 1 day
+  })
+);
+
 mongoose
   .connect(dbURL)
   .then(() => {
@@ -58,13 +72,21 @@ mongoose
     process.exit(1);
   });
 
+// ✅ Auth (login/signup) routes
+const authRoutes = require('./routes/auth');
+app.use('/users', authRoutes);
+
 // Load user routes
 const userRoutes = require('./routes/users');
 app.use('/users', userRoutes);
 
 // Home route redirect
 app.get('/', (req, res) => {
-  res.redirect('/users/login');
+  if (req.session.user) {
+    res.redirect('/explore');
+  } else {
+    res.redirect('/users/login');
+  }
 });
 
 // 🔥 Spotify token function
@@ -122,21 +144,6 @@ app.get('/save-top-tracks', async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
-});
-
-// // ✅ Check if 'routes/users.js' exists before importing
-// try {
-//   const userRoutes = require('./routes/users');
-//   app.use('/users', userRoutes);
-// } catch (error) {
-//   console.error(
-//     "⚠️ WARNING: 'routes/users.js' not found. Create the file to avoid errors."
-//   );
-// }
-
-// ✅ Homepage Route
-app.get('/', (req, res) => {
-  res.redirect('/users/login');
 });
 
 app.get('/home', async (req, res) => {
