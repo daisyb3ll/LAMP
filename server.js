@@ -289,3 +289,7 @@ app.get('/enter', (req, res) => {
     albums,
   });
 });
+
+app.get('/about', (req, res) => {
+  res.render('about'); // assuming you have views/about.ejs
+});

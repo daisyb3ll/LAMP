@@ -667,3 +667,19 @@ footer {
   pointer-events: none;
   object-fit: contain;
 }
+
+.project-intro {
+  display: flex;
+  justify-content: space-between;
+  gap: 60px;
+  max-width: 1100px;
+  margin: 60px auto;
+  padding: 0 20px;
+  font-family: "Coral Pixels", sans-serif;
+  color: #222;
+}
+
+.project-column,
+.info-column {
+  flex: 1;
+}
