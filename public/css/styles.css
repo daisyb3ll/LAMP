@@ -401,7 +401,7 @@ body {
 .album-card {
   text-align: center;
   width: 100%;
-  max-width: 200px;
+  max-width: 300px;
 }
 
 .album-card img {
@@ -468,36 +468,18 @@ footer {
 
 /* Album box container */
 .album-view-wrapper {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  gap: 40px;
-  max-width: 1000px;
-  width: 100%;
+flex-direction: row;
 }
 
 .album-page .content {
-  display: flex;
-  justify-content: space-evenly;
-  align-items: center;
-  /* fix vertical centering */
-  height: 100vh;
-  /* force vertical centering in viewport */
-  margin-left: 180px;
-  padding: 0 20px;
-}
-
-.album-page .album-view-wrapper {
+  flex-direction: row;
   display: flex;
   justify-content: center;
-  align-items: center;
-  /* ✅ vertical centering */
-  margin-left: 25em;
-  /* account for sidebar */
-  height: 100vh;
-  /* ✅ take full viewport height */
-  padding: 0 100px;
-  box-sizing: border-box;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  /* important for small screens */
+  padding: 20px;
+  margin-left: 0;
 }
 
 .masked-album-img {
@@ -683,4 +665,67 @@ footer {
 .project-column,
 .info-column {
   flex: 1;
+}
+
+@media (max-width: 768px) {
+  .album-page .album-view-wrapper {
+    display: flex;
+    flex-direction: column !important;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    padding: 20px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .album-page .content {
+    display: flex;
+    flex-direction: column !important;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  .album-art {
+    max-width: 300px;
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .album-details {
+    width: 90%;
+    max-width: 400px;
+    height: auto;
+  }
+
+  .page-container {
+    margin-left: 0 !important;
+  }
+
+  .sidebar {
+    position: sticky;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: auto;
+    background-color: #f5f5f5;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-bottom: 2px solid #ccc;
+    z-index: 1000;
+  }
+
+  .nav {
+    flex-direction: row;
+    gap: 16px;
+    justify-content: center;
+    padding: 0;
+  }
+
+  .nav a {
+    font-size: 14px;
+  }
 }
