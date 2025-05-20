@@ -58,19 +58,26 @@ app.use(
   })
 );
 
+module.exports = app;
+
 mongoose
   .connect(dbURL)
   .then(() => {
     console.log('✅ Connected to MongoDB');
-    const PORT = process.env.PORT || 3000;
-    app.listen(PORT, () => {
-      console.log(`🚀 Server started on port ${PORT}`);
-    });
+
+    if (require.main === module) {
+      const PORT = process.env.PORT || 3000;
+      app.listen(PORT, () => {
+        console.log(`🚀 Server started on port ${PORT}`);
+      });
+    }
   })
   .catch((err) => {
     console.error('❌ Could not connect to MongoDB:', err.message);
     process.exit(1);
   });
+
+module.exports = app;
 
 // ✅ Auth (login/signup) routes
 const authRoutes = require('./routes/auth');
