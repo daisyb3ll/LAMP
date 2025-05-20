@@ -4,7 +4,7 @@
   "description": "SE-498-01 Software Engineering Capstone; LAMP  ## 1. contributors;  ### Daisy Fernandez-Reyes'25         email; fernandezreyes@chapman.edu         git; [daisyb3ll]() ### Rory Sullivan'25         email; annbrown@chapman.edu         git;[rosullivan2]() ### Sarah Yoon'25         email; saryoon@chapman.edu         git; sarah-yoon",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "cross-env NODE_ENV=test jest --coverage"
   },
   "repository": {
     "type": "git",
@@ -29,5 +29,15 @@
     "mongoose": "^8.14.0",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1"
+  },
+  "jest": {
+    "testMatch": [
+      "**/tests/**/*.test.js"
+    ]
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3",
+    "mongodb-memory-server-core": "^10.1.4",
+    "supertest": "^7.1.1"
   }
 }

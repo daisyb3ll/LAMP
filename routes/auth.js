@@ -6,7 +6,18 @@ const bcrypt = require('bcrypt');
 const User = require('../models/User');
 
 //album background function
+//album background function
 async function getAlbumBackground() {
+  if (process.env.NODE_ENV === 'test') {
+    console.log('✅ Using test album data');
+    return [
+      {
+        name: 'Test Album',
+        images: [{ url: '/images/default-album.png' }],
+      },
+    ];
+  }
+
   const token = await getSpotifyToken();
   const response = await axios.get(
     'https://api.spotify.com/v1/browse/new-releases?limit=30',
@@ -29,40 +40,41 @@ router.get('/signup', async (req, res) => {
 
 router.post('/signup', async (req, res) => {
   const { username, email, password, password_confirm } = req.body;
-  const albums = await getAlbumBackground();
 
-  // ✅ Check if passwords match
-  if (password !== password_confirm) {
-    return res.render('signup', {
-      albums,
-      error: '❌ Passwords do not match',
-    });
+  // ✅ Step 1: Check for missing fields
+  if (!username || !email || !password || !password_confirm) {
+    return res.status(400).json({ error: 'All fields are required' });
   }
 
-  // ✅ Check if user already exists
+  // ✅ Step 2: Check if passwords match
+  if (password !== password_confirm) {
+    return res.status(400).json({ error: 'Passwords do not match' });
+  }
+
   const existingUser = await User.findOne({ $or: [{ email }, { username }] });
   if (existingUser) {
-    return res.render('signup', {
-      albums,
-      error: '⚠️ Username or email already exists',
-    });
+    return res.status(400).json({ error: 'Username or email already exists' });
   }
 
   try {
     const newUser = new User({ username, email, password });
     await newUser.save();
+
     req.session.user = {
       _id: newUser._id,
       username: newUser.username,
       email: newUser.email,
     };
-    res.redirect('/explore');
+
+    // ✅ Optional: only fetch albums *after* signup success
+    // const albums = await getAlbumBackground();
+
+    return res.status(201).json({ message: 'Signup successful' });
   } catch (err) {
     console.error('❌ Error creating user:', err.message);
-    res.render('signup', {
-      albums,
-      error: '❌ Something went wrong during signup',
-    });
+    return res
+      .status(500)
+      .json({ error: 'Something went wrong during signup' });
   }
 });
 
