@@ -32,7 +32,7 @@ async function getAlbumBackground() {
   }));
 }
 
-// =================== SIGNUP ===================
+// SIGNUP
 
 /**
  * @swagger
@@ -129,7 +129,7 @@ router.post('/signup', async (req, res) => {
   }
 });
 
-// =================== LOGIN ===================
+// LOGIN
 /**
  * @swagger
  * /users/login:
@@ -205,7 +205,7 @@ router.post('/login', async (req, res) => {
   res.redirect('/explore');
 });
 
-// =================== LOGOUT ===================
+// LOGOUT
 /**
  * @swagger
  * /users/logout:

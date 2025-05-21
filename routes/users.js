@@ -3,7 +3,7 @@ const router = express.Router();
 const axios = require('axios');
 const User = require('../models/User');
 
-// ⛽ Utility to get Spotify token
+// Utility to get Spotify token
 async function getSpotifyToken() {
   const response = await axios.post(
     'https://accounts.spotify.com/api/token',
@@ -20,7 +20,7 @@ async function getSpotifyToken() {
   return response.data.access_token;
 }
 
-// ✅ GET: Show login form with Spotify album background
+// GET: Show login form with Spotify album background
 router.get('/login', async (req, res) => {
   try {
     const token = await getSpotifyToken();
@@ -51,7 +51,7 @@ router.get('/login', async (req, res) => {
   }
 });
 
-// ✅ POST: Handle login form
+// POST: Handle login form
 router.post('/login', async (req, res) => {
   const { username, password } = req.body;
 
@@ -75,14 +75,14 @@ router.post('/login', async (req, res) => {
       });
     }
 
-    // ✅ ✅ ✅ RIGHT HERE: Save user to session
+    // Save user to session
     req.session.user = {
       _id: user._id,
       username: user.username,
       email: user.email,
     };
 
-    // ✅ Redirect to Explore page
+    // Redirect to Explore page
     res.redirect('/explore');
   } catch (err) {
     console.error('Login error:', err.message);
@@ -95,7 +95,7 @@ router.get('/signup', (req, res) => {
   res.render('signup'); // Assuming signup.ejs or signup.html is in your views
 });
 
-// ✅ POST: Handle signup form
+// POST: Handle signup form
 router.post('/signup', async (req, res) => {
   const { username, password, password_confirm, email } = req.body;
 
@@ -122,7 +122,7 @@ router.post('/signup', async (req, res) => {
   }
 });
 
-// ✅ GET: Profile page (only for logged-in users)
+// GET: Profile page (only for logged-in users)
 router.get('/profile', async (req, res) => {
   if (!req.session.user) return res.redirect('/users/login');
 
