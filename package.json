@@ -31,9 +31,9 @@
     "swagger-ui-express": "^5.0.1"
   },
   "jest": {
-    "testMatch": [
-      "**/tests/**/*.test.js"
-    ]
+    "testEnvironment": "node",
+    "forceExit": true,
+    "detectOpenHandles": true
   },
   "devDependencies": {
     "cross-env": "^7.0.3",

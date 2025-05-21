@@ -1,3 +1,4 @@
+console.log('✅ NODE_ENV:', process.env.NODE_ENV);
 const getSpotifyToken = require('../utils/spotify');
 const axios = require('axios');
 const express = require('express');
@@ -33,45 +34,95 @@ async function getAlbumBackground() {
 
 // =================== SIGNUP ===================
 
+/**
+ * @swagger
+ * /users/signup:
+ *   get:
+ *     summary: Show signup form
+ *     tags: [Users]
+ *     responses:
+ *       200:
+ *         description: Render signup page
+ */
+
 router.get('/signup', async (req, res) => {
   const albums = await getAlbumBackground();
   res.render('signup', { albums, error: null });
 });
 
+/**
+ * @swagger
+ * /users/signup:
+ *   post:
+ *     summary: Register a new user
+ *     tags: [Users]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/x-www-form-urlencoded:
+ *           schema:
+ *             type: object
+ *             required: [username, password, password_confirm, email]
+ *             properties:
+ *               username:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *               password_confirm:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *     responses:
+ *       302:
+ *         description: Redirects to login on success
+ *       400:
+ *         description: Validation errors
+ */
+
 router.post('/signup', async (req, res) => {
-  const { username, email, password, password_confirm } = req.body;
-
-  // ✅ Step 1: Check for missing fields
-  if (!username || !email || !password || !password_confirm) {
-    return res.status(400).json({ error: 'All fields are required' });
-  }
-
-  // ✅ Step 2: Check if passwords match
-  if (password !== password_confirm) {
-    return res.status(400).json({ error: 'Passwords do not match' });
-  }
-
-  const existingUser = await User.findOne({ $or: [{ email }, { username }] });
-  if (existingUser) {
-    return res.status(400).json({ error: 'Username or email already exists' });
-  }
-
   try {
+    const { username, email, password, password_confirm } = req.body;
+    console.log('🧪 Received body:', req.body);
+
+    if (
+      !username?.trim() ||
+      !email?.trim() ||
+      !password?.trim() ||
+      !password_confirm?.trim()
+    ) {
+      console.log('❗ Missing fields detected');
+      return res.status(400).json({ error: 'All fields are required' });
+    }
+
+    if (password !== password_confirm) {
+      const albums = await getAlbumBackground();
+      return res.status(400).render('signup', {
+        albums,
+        error: '❗ Passwords do not match',
+      });
+    }
+
+    const existingUser = await User.findOne({ $or: [{ email }, { username }] });
+    if (existingUser) {
+      return res
+        .status(400)
+        .json({ error: 'Username or email already exists' });
+    }
+
     const newUser = new User({ username, email, password });
     await newUser.save();
 
-    req.session.user = {
-      _id: newUser._id,
-      username: newUser.username,
-      email: newUser.email,
-    };
+    if (req.session) {
+      req.session.user = {
+        _id: newUser._id,
+        username: newUser.username,
+        email: newUser.email,
+      };
+    }
 
-    // ✅ Optional: only fetch albums *after* signup success
-    // const albums = await getAlbumBackground();
-
-    return res.status(201).json({ message: 'Signup successful' });
+    return res.redirect('/users/login');
   } catch (err) {
-    console.error('❌ Error creating user:', err.message);
+    console.error('❌ Caught error in /signup:', err.message);
     return res
       .status(500)
       .json({ error: 'Something went wrong during signup' });
@@ -79,7 +130,16 @@ router.post('/signup', async (req, res) => {
 });
 
 // =================== LOGIN ===================
-
+/**
+ * @swagger
+ * /users/login:
+ *   get:
+ *     summary: Render the login page with Spotify album art
+ *     tags: [Auth]
+ *     responses:
+ *       200:
+ *         description: Renders login page
+ */
 router.get('/login', async (req, res) => {
   try {
     const token = await getSpotifyToken();
@@ -96,6 +156,31 @@ router.get('/login', async (req, res) => {
     res.render('login', { albums: [], error: null });
   }
 });
+
+/**
+ * @swagger
+ * /users/login:
+ *   post:
+ *     summary: Log in a user
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/x-www-form-urlencoded:
+ *           schema:
+ *             type: object
+ *             required: [username, password]
+ *             properties:
+ *               username:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *     responses:
+ *       302:
+ *         description: Redirect to explore on success
+ *       200:
+ *         description: Rendered login page with error
+ */
 
 router.post('/login', async (req, res) => {
   const { username, password } = req.body;

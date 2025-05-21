@@ -52,7 +52,6 @@ router.get('/login', async (req, res) => {
 });
 
 // ✅ POST: Handle login form
-// ✅ POST: Handle login form
 router.post('/login', async (req, res) => {
   const { username, password } = req.body;
 
