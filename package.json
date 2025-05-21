@@ -6,7 +6,8 @@
   "scripts": {
     "test": "cross-env NODE_ENV=test jest --coverage",
     "start": "node server.js",
-    "clean": "npx rimraf node_modules coverage"
+    "clean": "npx rimraf node_modules coverage",
+    "sonar": "sonar-scanner -Dsonar.projectKey=daisyb3ll_LAMP -Dsonar.organization=daisyb3ll -Dsonar.host.url=https://sonarcloud.io"
   },
   "repository": {
     "type": "git",
@@ -20,6 +21,7 @@
   },
   "homepage": "https://github.com/rosullivan2/LAMP#readme",
   "dependencies": {
+    "@faker-js/faker": "^9.8.0",
     "axios": "^1.9.0",
     "bcrypt": "^5.1.1",
     "connect-mongo": "^5.1.0",

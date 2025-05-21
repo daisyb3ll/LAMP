@@ -151,7 +151,11 @@ async function setupApp() {
       const randomAlbum =
         randomAlbums[Math.floor(Math.random() * randomAlbums.length)];
 
-      res.render('home', { album: albumOfTheDay, randomAlbum });
+      res.render('explore', {
+        albums,
+        albumOfTheDay,
+        randomAlbum,
+      });
     } catch (error) {
       console.error(
         '❌ Error fetching albums:',
@@ -205,6 +209,45 @@ async function setupApp() {
         error.response?.data || error.message
       );
       res.status(500).send('Album not found');
+    }
+  });
+
+  // Admin database viewer
+  app.get('/admin', async (req, res) => {
+    try {
+      const User = mongoose.model('User'); // Reuse the already-defined model if available
+      const users = await User.find();
+
+      res.send(`
+        <h1>User Collection</h1>
+        <table border="1" cellpadding="10" cellspacing="0">
+          <tr><th>Username</th><th>Email</th></tr>
+          ${users
+            .map((u) => `<tr><td>${u.username}</td><td>${u.email}</td></tr>`)
+            .join('')}
+        </table>
+      `);
+    } catch (err) {
+      res.status(500).send('Error displaying users: ' + err.message);
+    }
+  });
+
+  const { faker } = require('@faker-js/faker');
+
+  app.get('/seed-users', async (req, res) => {
+    try {
+      const User = mongoose.model('User');
+
+      const fakeUsers = Array.from({ length: 10 }).map(() => ({
+        username: faker.internet.userName(),
+        email: faker.internet.email(),
+        password: faker.internet.password(10), // Add this line
+      }));
+
+      await User.insertMany(fakeUsers);
+      res.send('✅ 10 random users added to database');
+    } catch (err) {
+      res.status(500).send('❌ Error seeding users: ' + err.message);
     }
   });
 }
