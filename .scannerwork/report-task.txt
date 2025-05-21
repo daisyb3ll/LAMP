@@ -1,0 +1,7 @@
+organization=daisyb3ll
+projectKey=daisyb3ll_LAMP
+serverUrl=https://sonarcloud.io
+serverVersion=8.0.0.63591
+dashboardUrl=https://sonarcloud.io/dashboard?id=daisyb3ll_LAMP
+ceTaskId=AZbxAHLovbXOzs93WDPR
+ceTaskUrl=https://sonarcloud.io/api/ce/task?id=AZbxAHLovbXOzs93WDPR

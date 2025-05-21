@@ -4,7 +4,9 @@
   "description": "SE-498-01 Software Engineering Capstone; LAMP  ## 1. contributors;  ### Daisy Fernandez-Reyes'25         email; fernandezreyes@chapman.edu         git; [daisyb3ll]() ### Rory Sullivan'25         email; annbrown@chapman.edu         git;[rosullivan2]() ### Sarah Yoon'25         email; saryoon@chapman.edu         git; sarah-yoon",
   "main": "index.js",
   "scripts": {
-    "test": "cross-env NODE_ENV=test jest --coverage"
+    "test": "cross-env NODE_ENV=test jest --coverage",
+    "start": "node server.js",
+    "clean": "npx rimraf node_modules coverage"
   },
   "repository": {
     "type": "git",

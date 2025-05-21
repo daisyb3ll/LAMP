@@ -1,6 +1,6 @@
-process.env.NODE_ENV = 'test'; // ✅ MUST be before requiring app
+process.env.NODE_ENV = 'test'; // MUST be before requiring app
 
-require('dotenv').config({ path: '.env.test' }); // ✅ load test env vars
+require('dotenv').config({ path: '.env.test' }); // load test env vars
 
 const mongoose = require('mongoose');
 const request = require('supertest');
@@ -85,7 +85,7 @@ describe('POST /users/signup', () => {
       username: 'anotherUser',
       email: 'test@example.com',
       password: 'validPass123',
-      password_confirm: 'validPass123', // ✅ match what backend expects
+      password_confirm: 'validPass123', // match what backend expects
     });
 
     // Second signup with same email
@@ -93,7 +93,7 @@ describe('POST /users/signup', () => {
       username: 'anotherUser',
       email: 'test@example.com',
       password: 'validPass123',
-      password_confirm: 'validPass123', // ✅ match what backend expects
+      password_confirm: 'validPass123', // match what backend expects
     });
 
     console.log('STATUS:', response.statusCode);
@@ -116,8 +116,8 @@ describe('POST /users/signup', () => {
     console.log('BODY:', response.body);
     console.log('HEADERS:', response.headers);
 
-    expect(response.statusCode).toBe(302); // ✅ because of res.redirect()
-    expect(response.headers.location).toBe('/users/login'); // ✅ redirected location
+    expect(response.statusCode).toBe(302); // because of res.redirect()
+    expect(response.headers.location).toBe('/users/login'); // redirected location
   });
 
   test('POST /users/signup › should return 400 and show error if passwords do not match', async () => {
@@ -132,6 +132,6 @@ describe('POST /users/signup', () => {
     console.log('BODY:', response.text); // HTML string
 
     expect(response.statusCode).toBe(400);
-    expect(response.text).toContain('Passwords do not match'); // ✅ Look for message in rendered page
+    expect(response.text).toContain('Passwords do not match'); // Look for message in rendered page
   });
 });

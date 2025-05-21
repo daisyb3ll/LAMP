@@ -206,6 +206,16 @@ router.post('/login', async (req, res) => {
 });
 
 // =================== LOGOUT ===================
+/**
+ * @swagger
+ * /users/logout:
+ *   get:
+ *     summary: Log out the current user and destroy their session
+ *     tags: [Auth]
+ *     responses:
+ *       302:
+ *         description: Redirects to login page after logout
+ */
 
 router.get('/logout', (req, res) => {
   req.session.destroy(() => {
