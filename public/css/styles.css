@@ -468,9 +468,24 @@ footer {
 
 /* Album box container */
 .album-view-wrapper {
-flex-direction: row;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 20px;
 }
-
+.album-page .content.album-view {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  /* allows stacking if needed */
+  width: 100%;
+}
 .album-page .content {
   flex-direction: row;
   display: flex;
@@ -685,6 +700,10 @@ flex-direction: row;
     align-items: center;
     justify-content: center;
     padding: 20px;
+    margin: 0 auto;
+    max-width: 1200px;
+    padding: 20px;
+    box-sizing: border-box;
   }
 
   .album-art {
