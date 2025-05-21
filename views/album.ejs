@@ -77,6 +77,7 @@
             </div>
           </div>
 
+
           <div class="extra-info">
             <div>TIME</div>
             <div><%= album.release_date %></div>
@@ -84,7 +85,31 @@
           </div>
         </div>
       </div>
+      <div class="album-reviews">
+        <h4>User Reviews</h4>
+        <% if (reviews.length===0) { %>
+          <p>No reviews yet. Be the first!</p>
+          <% } else { %>
+            <ul class="review-list">
+              <% reviews.forEach(function(r) { %>
+                <li class="review-item">
+                  <div class="review-stars">
+                    <%= '★' .repeat(r.rating) + '☆' .repeat(5 - r.rating) %>
+                  </div>
+                  <p>
+                    <%= r.review %>
+                  </p>
+                  <small>
+                    <%= new Date(r.createdAt).toLocaleDateString() %>
+                  </small>
+                </li>
+                <% }) %>
+            </ul>
+            <% } %>
+      </div>
     </div>
+
+    
     <script>
       let selectedRating = 0;
 
@@ -104,17 +129,37 @@
       function submitReview() {
           const review = document.getElementById("review-text").value;
 
-          // Optional: Save to DB here with fetch()
+          fetch(window.location.pathname + '/rate', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              rating: selectedRating,
+              review: review
+            })
+          })
+            .then(res => res.json())
+            .then(data => {
+              console.log('✅ Review submitted:', data);
 
-          // Update visible display to show stars
-          const display = document.getElementById("rating-display");
-          display.innerHTML = "★".repeat(selectedRating) + "☆".repeat(5 - selectedRating);
+              // Update visible stars after successful submission
+              const display = document.getElementById("rating-display");
+              display.innerHTML = "★".repeat(selectedRating) + "☆".repeat(5 - selectedRating);
 
-          // Close and reset form
-          document.getElementById("rating-form").classList.add("hidden");
-          document.getElementById("review-text").value = "";
-          rate(0);
+              document.getElementById("rating-form").classList.add("hidden");
+              document.getElementById("review-text").value = "";
+              rate(0);
+
+              // Optional: reload page to show in reviews
+              location.reload();
+            })
+            .catch(err => {
+              console.error('❌ Error submitting review:', err);
+              alert('Error submitting review');
+            });
         }
+
     </script>
 
   </body>

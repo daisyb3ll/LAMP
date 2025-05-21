@@ -9,6 +9,10 @@ const axios = require('axios');
 const swaggerJsDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 
+const Review = require('./models/Review');
+const User = require('./models/User');
+const reviewRoutes = require('./routes/reviews'); // ✅ added
+
 const app = express();
 
 // Middleware
@@ -49,7 +53,6 @@ async function setupApp() {
   const client = mongoose.connection.getClient();
 
   console.log('✅ NODE_ENV:', process.env.NODE_ENV);
-  console.log('✅ Connected to DB:', mongoose.connection.name);
 
   app.use(
     session({
@@ -67,9 +70,8 @@ async function setupApp() {
   app.use('/users', authRoutes);
   app.use('/users', userRoutes);
 
-  
-  app.use('/', require('./routes/albums'));
-
+  const reviewRoutes = require('./routes/reviews');
+  app.use('/', reviewRoutes);
 
   app.get('/', (req, res) => {
     req.session.user ? res.redirect('/explore') : res.redirect('/users/login');
@@ -77,46 +79,45 @@ async function setupApp() {
 
   app.get('/about', (req, res) => res.render('about'));
 
-  app.get('/enter', (req, res) => {
-    const album = {
-      id: 'test-album-1',
-      name: 'Fake Album of the Day',
-      images: [{ url: '/images/default-album.png' }],
-      artists: [{ name: 'Fake Artist' }],
-      release_date: '2024-01-01',
-      tracks: { items: [{ name: 'Song A' }, { name: 'Song B' }] },
-    };
+  app.get('/enter', async (req, res) => {
+    try {
+      const user = await User.findById(req.session.user._id);
+      const reviews = await Review.find({ userId: user._id });
 
-    const randomAlbum = {
-      id: 'test-album-2',
-      name: 'Random Fake Album',
-      images: [{ url: '/images/default-album.png' }],
-      artists: [{ name: 'Random Artist' }],
-      release_date: '2023-11-15',
-      tracks: { items: [{ name: 'Random Song' }] },
-    };
+      const token = await getSpotifyToken();
+      const ratedAlbums = await Promise.all(
+        reviews.map(async (r) => {
+          const albumRes = await axios.get(`https://api.spotify.com/v1/albums/${r.albumId}`, {
+            headers: { Authorization: `Bearer ${token}` }
+          });
+          return {
+            ...r.toObject(),
+            album: albumRes.data
+          };
+        })
+      );
 
-    const albums = Array.from({ length: 12 }).map((_, i) => ({
-      id: `dummy-${i}`,
-      name: `Album ${i + 1}`,
-      images: [{ url: '/images/default-album.png' }],
-    }));
-
-    res.render('enter', { album, randomAlbum, albums });
+      res.render('enter', {
+        album: { name: "Sample" },
+        randomAlbum: { name: "Another" },
+        albums: [],
+        user,
+        ratedAlbums
+      });
+    } catch (err) {
+      console.error('❌ Error loading /enter:', err.message);
+      res.status(500).send('Error loading your library');
+    }
   });
 
   app.get('/save-top-tracks', async (req, res) => {
     try {
       const token = await getSpotifyToken();
-      if (!token)
-        return res.status(500).json({ error: 'Failed to get Spotify token' });
+      if (!token) return res.status(500).json({ error: 'Failed to get Spotify token' });
 
-      const response = await axios.get(
-        'https://api.spotify.com/v1/browse/new-releases',
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      const response = await axios.get('https://api.spotify.com/v1/browse/new-releases', {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
       const trackData = response.data.albums.items.map((track) => ({
         name: track.name,
@@ -152,8 +153,7 @@ async function setupApp() {
         { headers: { Authorization: `Bearer ${token}` }, timeout: 5000 }
       );
       const randomAlbums = randomResponse.data.albums.items;
-      const randomAlbum =
-        randomAlbums[Math.floor(Math.random() * randomAlbums.length)];
+      const randomAlbum = randomAlbums[Math.floor(Math.random() * randomAlbums.length)];
 
       res.render('explore', {
         albums,
@@ -161,10 +161,7 @@ async function setupApp() {
         randomAlbum,
       });
     } catch (error) {
-      console.error(
-        '❌ Error fetching albums:',
-        error.response?.data || error.message
-      );
+      console.error('❌ Error fetching albums:', error.response?.data || error.message);
       res.status(500).send('Error fetching albums');
     }
   });
@@ -206,29 +203,29 @@ async function setupApp() {
         `https://api.spotify.com/v1/albums/${req.params.id}`,
         { headers: { Authorization: `Bearer ${token}` }, timeout: 5000 }
       );
-      res.render('album', { album: response.data });
+
+      const reviews = await Review.find({ albumId: req.params.id }).sort({ createdAt: -1 });
+
+      res.render('album', {
+        album: response.data,
+        reviews,
+      });
     } catch (error) {
-      console.error(
-        '❌ Error fetching album details:',
-        error.response?.data || error.message
-      );
+      console.error('❌ Error fetching album details:', error.response?.data || error.message);
       res.status(500).send('Album not found');
     }
   });
 
-  // Admin database viewer
   app.get('/admin', async (req, res) => {
     try {
-      const User = mongoose.model('User'); // Reuse the already-defined model if available
+      const User = mongoose.model('User');
       const users = await User.find();
 
       res.send(`
         <h1>User Collection</h1>
         <table border="1" cellpadding="10" cellspacing="0">
           <tr><th>Username</th><th>Email</th></tr>
-          ${users
-            .map((u) => `<tr><td>${u.username}</td><td>${u.email}</td></tr>`)
-            .join('')}
+          ${users.map((u) => `<tr><td>${u.username}</td><td>${u.email}</td></tr>`).join('')}
         </table>
       `);
     } catch (err) {
@@ -241,11 +238,10 @@ async function setupApp() {
   app.get('/seed-users', async (req, res) => {
     try {
       const User = mongoose.model('User');
-
       const fakeUsers = Array.from({ length: 10 }).map(() => ({
         username: faker.internet.userName(),
         email: faker.internet.email(),
-        password: faker.internet.password(10), // Add this line
+        password: faker.internet.password(10),
       }));
 
       await User.insertMany(fakeUsers);
@@ -272,16 +268,10 @@ async function getSpotifyToken() {
         timeout: 5000,
       }
     );
-    console.log(
-      '🔑 Got Spotify Token:',
-      response.data.access_token.slice(0, 10)
-    );
+    console.log('🔑 Got Spotify Token:', response.data.access_token.slice(0, 10));
     return response.data.access_token;
   } catch (error) {
-    console.error(
-      '❌ Error fetching Spotify token:',
-      error.response?.data || error.message
-    );
+    console.error('❌ Error fetching Spotify token:', error.response?.data || error.message);
     return null;
   }
 }

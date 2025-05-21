@@ -802,3 +802,30 @@ button {
   font-family: 'Source Serif 4', monospace;
   cursor: pointer;
 }
+
+.album-reviews {
+  margin-top: 40px;
+  width: 100%;
+  max-width: 600px;
+}
+
+.album-reviews h4 {
+  font-family: 'Coral Pixels', monospace;
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.review-list {
+  list-style: none;
+  padding: 0;
+}
+
+.review-item {
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+}
+
+.review-stars {
+  color: gold;
+  font-size: 18px;
+}

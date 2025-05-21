@@ -1,21 +1,71 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title><%= user.name %>'s Profile</title>
-  </head>
-  <body>
-    <h1>Welcome, <%= user.username %>!</h1>
-    <p>Email: <%= user.email %></p>
-    <% if (user.createdAt) { %>
-    <p>Joined: <%= user.createdAt.toDateString() %></p>
-    <% } %>
+<html lang="en">
 
-    <div style="margin-top: 30px">
-      <a href="/explore">
-        <button class="back-button">← Back to Explore</button>
-      </a>
+<head>
+  <meta charset="UTF-8" />
+  <title>
+    <%= user.username %>'s Profile
+  </title>
+  <link rel="icon" type="image/png" href="/images/transperent-lamp-cd.png" sizes="32x32" />
+  <link rel="stylesheet" href="/css/styles.css" />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Bungee+Tint&family=Chokokutai&family=Comfortaa:wght@300..700&family=Coral+Pixels&family=Dongle&family=Gaegu&family=IM+Fell+Double+Pica:ital@0;1&family=Jersey+15&family=Kirang+Haerang&family=Lacquer&family=Lexend+Deca:wght@100..900&family=Rubik+Dirt&family=Special+Elite&family=Syne+Mono&family=Tiny5&display=swap');
+    @import url('https://use.typekit.net/ldr5vzi.css');
+  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+
+<body class="profile-page">
+  <div class="sidebar">
+    <div class="logo">
+      <img src="/images/transperent-lamp-cd.png" alt="lamp logo" />
     </div>
+    <div class="nav">
+      <a href="/explore">explore</a>
+      <a href="/enter">library</a>
+      <a href="/users/profile">profile</a>
+      <a href="/about">about</a>
+    </div>
+  </div>
 
-    <a href="/users/logout">Log Out</a>
+  <div class="page-container">
+    <div class="content-wrapper">
+      <main class="content">
+        <section class="overview">
+          <h1>
+            <%= user.username %>'s Profile
+          </h1>
+          <hr />
+          <p><strong>Email:</strong>
+            <%= user.email %>
+          </p>
+          <% if (user.createdAt) { %>
+            <p><strong>Joined:</strong>
+              <%= user.createdAt.toDateString() %>
+            </p>
+            <% } %>
+              <% if (user.bio) { %>
+                <p><strong>Bio:</strong>
+                  <%= user.bio %>
+                </p>
+                <% } %>
+                  <% if (user.favoriteGenres && user.favoriteGenres.length) { %>
+                    <p><strong>Favorite Genres:</strong>
+                      <%= user.favoriteGenres.join(', ') %></p>
+            <% } %>
+          </section>
+
+          <div style="margin-top: 30px">
+            <a href="/explore">
+              <button class="back-button">← Back to Explore</button>
+            </a>
+          </div>
+
+          <div style="margin-top: 20px">
+            <a href="/users/logout">Log Out</a>
+          </div>
+        </main>
+      </div>
+    </div>
   </body>
 </html>

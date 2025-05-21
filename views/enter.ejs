@@ -1,8 +1,107 @@
-<!-- <h1>Hi, Daisy. You have found an Easter Egg</h1>
-<h1>:3</h1> -->
-<!-- <img src="/images/luffy.jpg" alt="Cool Pic" width="300" /> -->
-<div style="margin-top: 30px">
-  <a href="/explore">
-    <button class="back-button">← Back to Explore</button>
-  </a>
-</div>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>LAMP - Library</title>
+  <link rel="icon" type="image/png" href="/images/transperent-lamp-cd.png" sizes="32x32" />
+  <link rel="stylesheet" href="/css/styles.css" />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Bungee+Tint&family=Chokokutai&family=Comfortaa:wght@300..700&family=Coral+Pixels&family=Darumadrop+One&family=Dongle&family=Doto:wght@100..900&family=Gaegu&family=IM+Fell+Double+Pica:ital@0;1&family=Jersey+15&family=Kirang+Haerang&family=Lacquer&family=Lexend+Deca:wght@100..900&family=Poppins&family=Rubik+Dirt&family=Source+Serif+4&family=Special+Elite&family=Syne+Mono&family=Tiny5&display=swap');
+  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+
+<body>
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="logo">
+      <img src="/images/transperent-lamp-cd.png" alt="lamp logo" />
+    </div>
+    <div class="nav">
+      <a href="/explore">explore</a>
+      <a href="/enter">library</a>
+      <a href="/users/profile">profile</a>
+      <a href="/about">about</a>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="page-container">
+    <div class="content-wrapper">
+      <main class="content">
+
+        <div class="profile-header">
+          <% if (user) { %>
+            <h2>
+              <%= user.username %>'s Library
+            </h2>
+            <p>
+              <%= user.bio || '' %>
+            </p>
+            <% if (user.favoriteGenres && user.favoriteGenres.length) { %>
+              <p><strong>Genres:</strong>
+                <%= user.favoriteGenres.join(', ') %></p>
+            <% } %>
+          <% } else { %>
+            <p>Please log in to view your library.</p>
+          <% } %>
+        </div>
+
+        <% if (ratedAlbums && ratedAlbums.length > 0) { %>
+          <div class="album-grid">
+            <% ratedAlbums.forEach(item => { %>
+              <div class="album-card">
+                <a href="/album/<%= item.album.id %>">
+                  <div class="cd-case">
+                    <img src="/images/cd-case.svg" class="cd-case-bg" />
+                    <div class="album-mask">
+                      <img src="<%= item.album.images[0]?.url || ' /images/default-album.png' %>"
+                  class="masked-album-img" />
+        </div>
+        <img src="/images/cd-case-top.svg" class="cd-case-overlay" />
+    </div>
+    <div class="album-title">
+      <%= item.album.name %>
+    </div>
+    </a>
+    <div class="review-info">
+      <p>
+        <%= '★' .repeat(item.rating) + '☆' .repeat(5 - item.rating) %>
+      </p>
+      <p>
+        <%= item.review %>
+      </p>
+      <small>Reviewed on <%= new Date(item.createdAt).toLocaleDateString() %></small>
+    </div>
+  </div>
+  <% }) %>
+    </div>
+    <% } else { %>
+      <p>No rated albums yet.</p>
+      <% } %>
+
+        <div style="margin-top: 30px">
+          <a href="/explore">
+            <button class="back-button">← Back to Explore</button>
+          </a>
+        </div>
+
+        </main>
+        </div>
+        </div>
+
+        <!-- Footer -->
+        <footer>
+          <section class="container">
+            <a href="/explore">
+              <div class="logo">
+                <img src="/images/transperent-lamp-cd.png" alt="/LAMP logo" />
+              </div>
+            </a>
+            <p>xoxo sarah & daisy <br /> /LAMP©2025</p>
+          </section>
+        </footer>
+</body>
+
+</html>
