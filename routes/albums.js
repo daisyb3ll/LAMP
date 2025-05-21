@@ -11,7 +11,7 @@ router.post('/album/:id/rate', async (req, res) => {
             albumId,
             rating,
             review,
-            userId: req.session.user._id // ✅ this connects it to the logged-in user
+            userId: req.session.user._id 
         });
 
         await newReview.save();

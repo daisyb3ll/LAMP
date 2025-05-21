@@ -127,7 +127,7 @@ async function setupApp() {
       }));
 
       await Track.insertMany(trackData);
-      res.json({ message: '✅ Top tracks saved to MongoDB!', data: trackData });
+      res.json({ message: 'Top tracks saved to MongoDB!', data: trackData });
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
