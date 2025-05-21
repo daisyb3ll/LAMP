@@ -67,6 +67,10 @@ async function setupApp() {
   app.use('/users', authRoutes);
   app.use('/users', userRoutes);
 
+  
+  app.use('/', require('./routes/albums'));
+
+
   app.get('/', (req, res) => {
     req.session.user ? res.redirect('/explore') : res.redirect('/users/login');
   });

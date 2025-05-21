@@ -29,7 +29,7 @@
         <a href="/explore">explore</a>
         <a href="/enter">library</a>
         <a href="/users/profile">profile</a>
-        <a href="#/about.ejs">about</a>
+        <a href="/about">about</a>
       </div>
     </div>
 
@@ -61,7 +61,21 @@
             <% }) %>
           </div>
 
-          <div class="rating">RATING</div>
+          <div class="rating-section">
+          <div class="rating-toggle" id="rating-display" onclick="toggleRating()">RATING</div>
+          
+            <div id="rating-form" class="hidden">
+              <div class="stars">
+                <span onclick="rate(1)">★</span>
+                <span onclick="rate(2)">★</span>
+                <span onclick="rate(3)">★</span>
+                <span onclick="rate(4)">★</span>
+                <span onclick="rate(5)">★</span>
+              </div>
+              <textarea id="review-text" placeholder="Write your review..." rows="3"></textarea>
+              <button onclick="submitReview()">Submit</button>
+            </div>
+          </div>
 
           <div class="extra-info">
             <div>TIME</div>
@@ -71,5 +85,38 @@
         </div>
       </div>
     </div>
+    <script>
+      let selectedRating = 0;
+
+      function toggleRating() {
+        const form = document.getElementById("rating-form");
+        form.classList.toggle("hidden");
+      }
+
+      function rate(stars) {
+        selectedRating = stars;
+        const allStars = document.querySelectorAll(".stars span");
+        allStars.forEach((star, index) => {
+          star.classList.toggle("selected", index < stars);
+        });
+      }
+
+      function submitReview() {
+          const review = document.getElementById("review-text").value;
+
+          // Optional: Save to DB here with fetch()
+
+          // Update visible display to show stars
+          const display = document.getElementById("rating-display");
+          display.innerHTML = "★".repeat(selectedRating) + "☆".repeat(5 - selectedRating);
+
+          // Close and reset form
+          document.getElementById("rating-form").classList.add("hidden");
+          document.getElementById("review-text").value = "";
+          rate(0);
+        }
+    </script>
+
   </body>
+
 </html>
